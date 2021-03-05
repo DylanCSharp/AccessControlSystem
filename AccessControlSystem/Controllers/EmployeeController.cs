@@ -80,7 +80,7 @@ namespace AccessControlSystem.Controllers
                 {
                     //user already signed in
                     TempData["CheckedIn"] = "You are already checked in";
-                    return RedirectToAction("CheckedIn", "Employee");
+                    return View("Index", "Employee");
                 }
                 else if (user.CheckInStatus == 0 && checkInStatus == 1)
                 {
@@ -96,17 +96,25 @@ namespace AccessControlSystem.Controllers
                     await conn.CloseAsync();
                     await command.DisposeAsync();
                     await dataReader.CloseAsync();
-                    return View();
+
+                    return View("Index", "Employee");
+
                 }
                 else if (user.CheckInStatus == 1 && checkInStatus == 0)
                 {
                     //sign out user
-                    return View();
+                    TempData["SignOut"] = "You have been signed out, " + user.Employee.EmployeeName;
+
+                    return View("Index", "Employee");
                 }
                 else if (user.CheckInStatus == 0 && checkInStatus == 0)
                 {
                     //user already signed out
-                    return View();
+                    return View("Index", "Employee");
+                }
+                else
+                {
+                    return View("Index", "Employee");
                 }
             }
             else
