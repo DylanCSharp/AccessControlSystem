@@ -57,7 +57,7 @@ namespace AccessControlSystem.Controllers
         {
             if (HttpContext.Session.GetString("LoggedInUser") != null)
             {
-                return View(_context.Employees);
+                return View();
             }
             else
             {
@@ -66,29 +66,32 @@ namespace AccessControlSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CheckIn(int checkInStatus)
+        public async Task<IActionResult> CheckIn(int checkIn, int checkOut)
         {
             if (HttpContext.Session.GetString("LoggedInUser") != null)
             {
                 DateTime date = DateTime.Now;
 
+                string timeoutdummy = "00:00";
+
                 int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser"));
 
                 var user = await _context.EmployeeLogs.Where(x => x.EmployeeId.Equals(userID)).FirstOrDefaultAsync();
 
-                if (user.CheckInStatus == 1 && checkInStatus == 1)
+                if (user.CheckInStatus == 1 && checkIn == 1 && user.DateLog.Contains(date.ToString("dd-MM-yyyy")))
                 {
                     //user already signed in
-                    TempData["CheckedIn"] = "You are already checked in";
-                    return View("Index", "Employee");
+                    TempData["AlreadyCheckedIn"] = "You are already checked in";
+                    return RedirectToAction("Index", "Home");
                 }
-                else if (user.CheckInStatus == 0 && checkInStatus == 1)
+                else if (user.CheckInStatus == 0 && checkIn == 1 && !user.DateLog.Contains(date.ToString("dd-MM-yyyy")))
                 {
                     //sign in user
+                    //
                     SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
                     await conn.OpenAsync();
 
-                    string query = "INSERT INTO EMPLOYEE_LOG VALUES ();";
+                    string query = "INSERT INTO EMPLOYEE_LOG VALUES ("+userID+", '"+ date.ToShortTimeString() +"', '"+timeoutdummy+"', '"+date.ToString("dd-MM-yyyy")+"', "+checkIn+");";
 
                     SqlCommand command = new SqlCommand(query, conn);
                     SqlDataReader dataReader = await command.ExecuteReaderAsync();
@@ -97,24 +100,39 @@ namespace AccessControlSystem.Controllers
                     await command.DisposeAsync();
                     await dataReader.CloseAsync();
 
-                    return View("Index", "Employee");
+                    TempData["CheckedIn"] = "You have been checked in";
+
+                    return RedirectToAction("Index", "Home");
 
                 }
-                else if (user.CheckInStatus == 1 && checkInStatus == 0)
+                else if (user.CheckInStatus == 1 && checkOut == 0)
                 {
                     //sign out user
-                    TempData["SignOut"] = "You have been signed out, " + user.Employee.EmployeeName;
+                    TempData["SignOut"] = "You have been signed out";
 
-                    return View("Index", "Employee");
+                    //Change checked in status to 0
+                    SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+                    await conn.OpenAsync();
+
+                    string query = "UPDATE EMPLOYEE_LOG SET CHECK_IN_STATUS = 0, TIME_OUT = '"+date.ToShortTimeString()+"' WHERE EMPLOYEE_LOG_NUMBER = "+user.EmployeeLogNumber+"";
+
+                    SqlCommand command = new SqlCommand(query, conn);
+                    SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                    await conn.CloseAsync();
+                    await command.DisposeAsync();
+                    await dataReader.CloseAsync();
+
+                    return RedirectToAction("Index", "Home");
                 }
-                else if (user.CheckInStatus == 0 && checkInStatus == 0)
+                else if (user.CheckInStatus == 0 && checkOut == 0)
                 {
                     //user already signed out
-                    return View("Index", "Employee");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    return View("Index", "Employee");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             else

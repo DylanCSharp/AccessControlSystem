@@ -18,6 +18,9 @@
             <div class="card-body p-5">
                 <h1 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h1>
                 <div style="height: 125px;"></div>
+                <h3>@TempData["AlreadyCheckedIn"]</h3>
+                <h3>@TempData["SignOut"]</h3>
+                <h3>@TempData["CheckedIn"]</h3>
                 <div class="form-group text-center">
                     <label for="inputEmployee">Are you part of our Staff or a Visitor?</label>
                     <br />
@@ -25,7 +28,7 @@
                     <div style="height: 5px;"></div>
                     <button type="submit" class="btn btn-outline-secondary w-25" id="inputVisitor" formmethod="post" name="visitor" required>Visitor</button>
                 </div>
-                <div style="height: 125px;"></div> 
+                <div style="height: 125px;"></div>
             </div>
         </div>
     </div>
