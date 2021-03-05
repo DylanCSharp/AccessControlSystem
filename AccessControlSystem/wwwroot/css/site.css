@@ -1,0 +1,141 @@
+﻿* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", "serif";
+    color: #666666;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 12vh;
+    background-color: #435f6d;
+}
+
+header {
+    margin-bottom: 125px;
+}
+
+.logo {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 20px;
+    color: #fff;
+}
+
+.nav-links {
+    background-color: #435f6d;
+    display: flex;
+    width: 40%;
+    justify-content: space-evenly;
+}
+
+    .nav-links li {
+        list-style: none;
+    }
+
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        letter-spacing: 2px;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+.burger {
+    display: none;
+    cursor: pointer;
+}
+
+    .burger div {
+        width: 25px;
+        height: 2.5px;
+        background-color: #fff;
+        margin: 5px;
+        transition: all 0.5s ease;
+    }
+
+@media screen and (max-width: 1024px) {
+    .nav-links {
+        width: 40%;
+    }
+
+    .logo {
+        letter-spacing: 3px;
+    }
+}
+
+@media screen and (max-width: 2500px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .nav-links {
+        position: absolute;
+        right: 0px;
+        top: 12vh;
+        height: 92vh;
+        background-color: #6b7e84;
+        display: flex;
+        flex-direction: column;
+        width: 35%;
+        align-self: center;
+        text-align: center;
+        transform: translateX(100%);
+    }
+
+        .nav-links li {
+            opacity: 0;
+        }
+
+    .burger {
+        display: block;
+    }
+
+    .heading {
+        display: none;
+    }
+}
+
+.nav-active {
+    transform: translateX(0%);
+}
+
+@keyframes navLinkFade {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+
+.toggle .line1 {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.toggle .line2 {
+    opacity: 0;
+}
+
+.toggle .line3 {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+.intro {
+    min-height: 100%;
+}
+
+body {
+    background: url("../lib/bootstrap/dist/img/lock.jpg") no-repeat center center fixed;
+    background-size: cover;
+}

@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Network Configurations&trade;</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <form>
+    <div class="container-fluid">
+        <div class="card border-0 shadow my-5">
+            <div class="card-body p-5">
+                <h1 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h1>
+                <div style="height: 125px;"></div>
+                <div class="form-group text-center">
+                    <label for="inputEmployee">Are you part of our Staff or a Visitor?</label>
+                    <br />
+                    <button type="submit" class="btn btn-outline-primary w-25" id="inputEmployee" value="1" formmethod="post" name="employee" required>Staff</button>
+                    <div style="height: 5px;"></div>
+                    <button type="submit" class="btn btn-outline-secondary w-25" id="inputVisitor" formmethod="post" name="visitor" required>Visitor</button>
+                </div>
+                <div style="height: 125px;"></div> 
+            </div>
+        </div>
+    </div>
+    </form>
+</body>
+</html>

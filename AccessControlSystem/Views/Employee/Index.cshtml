@@ -1,0 +1,49 @@
+﻿@model IEnumerable<AccessControlSystem.Models.Employee>
+@{
+    ViewData["Title"] = "Employee Code";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Network Configurations&trade;</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <form>
+        <div class="container-fluid">
+            <div class="card border-0 shadow my-5">
+                <div class="card-body p-5">
+                    <h1 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h1>
+                    <h3>@TempData["Invalid"]</h3>
+                    <div style="height: 125px;"></div>
+                    <div class="form-group text-center">
+                        <label for="empName">Choose an Employee Name</label>
+                        <br />
+                        <select class="form-select btn-outline-info w-25 rounded" id="empName" name="name">
+                            @foreach (var item in Model)
+                            {
+                                <option value="@item.EmployeeName">@item.EmployeeName</option>
+                            }
+                        </select>
+                        <div style="height: 12px;"></div>
+                        <br />
+                        <label for="inputEmployee">Enter your 4-Digit Employee Pass Code</label>
+                        <br />
+                        <input type="password" name="one" maxlength="1" style="width: 50px; height: 40px; font-size: 40px; text-align: center;" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                        <input type="password" name="two" maxlength="1" style="width: 50px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                        <input type="password" name="three" maxlength="1" style="width: 50px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                        <input type="password" name="four" maxlength="1" style="width: 50px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                        <br />
+                        <div style="height: 12px;"></div>
+                        <button type="submit" class="btn btn-outline-primary w-25" formmethod="post">Submit</button>
+                    </div>
+                    <div style="height: 125px;"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
