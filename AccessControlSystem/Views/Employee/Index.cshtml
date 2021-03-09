@@ -25,7 +25,7 @@
                     <div class="form-group text-center">
                         <label for="empName">Choose an Employee Name:</label>
                         <br />
-                        <select class="form-select btn-outline-info w-25 rounded" id="empName" name="name">
+                        <select class="form-select btn-outline-info w-25 rounded" style="height: 40px;" id="empName" name="name">
                             @foreach (var item in Model)
                             {
                                 <option value="@item.EmployeeName">@item.EmployeeName</option>
@@ -36,14 +36,14 @@
                         <label for="inputEmployee">Enter your 4-Digit Employee Pass Code:</label>
                         <br />
                         <div class="form-wrap">
-                        <input type="password" name="one" maxlength="1" style="width: 50px; height: 40px; font-size: 40px; text-align: center;" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
-                        <input type="password" name="two" maxlength="1" style="width: 50px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
-                        <input type="password" name="three" maxlength="1" style="width: 50px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
-                        <input type="password" name="four" maxlength="1" style="width: 50px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
+                        <input type="password" name="one" maxlength="1" style="width: 58px; height: 40px; font-size: 40px; text-align: center;" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
+                        <input type="password" name="two" maxlength="1" style="width: 58px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
+                        <input type="password" name="three" maxlength="1" style="width: 58px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
+                        <input type="password" name="four" maxlength="1" style="width: 58px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
                         </div>
                         <br />
                         <div style="height: 12px;"></div>
-                        <button type="submit" class="btn btn-outline-dark w-25" formmethod="post">Submit</button>
+                        <button type="submit" class="btn btn-outline-dark w-25" formmethod="post">Login</button>
                     </div>
                     <div style="height: 20px;"></div>
                 </div>
