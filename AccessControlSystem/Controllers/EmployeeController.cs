@@ -32,113 +32,175 @@ namespace AccessControlSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(int one, int two, int three, int four, string name)
         {
-            string passcode = one.ToString() + two.ToString() + three.ToString() + four.ToString();
-
-            var user = await _context.Employees.Where(x => x.EmployeeName.Equals(name)).FirstOrDefaultAsync();
-
-            ScryptEncoder scryptEncoder = new ScryptEncoder();
-            bool isValid = scryptEncoder.Compare(passcode, user.EmployeeHashCode);
-
-            if (isValid == true)
+            try
             {
-                HttpContext.Session.SetString("LoggedInUser", user.EmployeeId.ToString());
-                ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
-                return View("CheckIn");
+                string passcode = one.ToString() + two.ToString() + three.ToString() + four.ToString();
+
+                var user = await _context.Employees.Where(x => x.EmployeeName.Equals(name)).FirstOrDefaultAsync();
+
+                ScryptEncoder scryptEncoder = new ScryptEncoder();
+                bool isValid = scryptEncoder.Compare(passcode, user.EmployeeHashCode);
+
+                if (isValid == true)
+                {
+                    HttpContext.Session.SetString("LoggedInUser", user.EmployeeId.ToString());
+
+                    DateTime date = DateTime.Now;
+
+                    string dummy = "00:00";
+                    int checkInStatus = 0;
+
+                    int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser"));
+
+                    var employeeLog = await _context.EmployeeLogs.Where(x => x.EmployeeId.Equals(userID) && x.DateLog.Equals(date.ToString("dd-MM-yyyy"))).FirstOrDefaultAsync();
+
+                    if (employeeLog != null)
+                    {
+                        ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
+                        return View("CheckIn");
+                    }
+                    else
+                    {
+                        SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+                        await conn.OpenAsync();
+
+                        string query = "INSERT INTO EMPLOYEE_LOG VALUES (" + userID + ", '" + dummy + "', '" + dummy + "', '" + date.ToString("dd-MM-yyyy") + "', " + checkInStatus + ");";
+
+                        SqlCommand command = new SqlCommand(query, conn);
+                        SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                        await conn.CloseAsync();
+                        await command.DisposeAsync();
+                        await dataReader.CloseAsync();
+
+                        ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
+                        return View("CheckIn");
+                    }
+                }
+                else
+                {
+                    TempData["Invalid"] = "Sorry, Employee Name and Passcode Do Not Match!";
+                    return RedirectToAction("Index", "Employee");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["Invalid"] = "Sorry, this Employee Name and Passcode do not match!";
-                return RedirectToAction("Index", "Employee");
+                TempData["Exception"] = ex.Message.ToString();
+                return RedirectToAction("Index", "Home");
             }
         }
 
         [HttpGet]
         public IActionResult CheckIn()
         {
-            if (HttpContext.Session.GetString("LoggedInUser") != null)
+            try
             {
-                return View();
+                if (HttpContext.Session.GetString("LoggedInUser") != null)
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Employee");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return RedirectToAction("Index", "Employee");
+                TempData["Exception"] = ex.Message.ToString();
+                return RedirectToAction("Index", "Home");
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> CheckIn(int checkIn, int checkOut)
         {
-            if (HttpContext.Session.GetString("LoggedInUser") != null)
+            try
             {
-                DateTime date = DateTime.Now;
-
-                string timeoutdummy = "00:00";
-
-                int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser"));
-
-                var user = await _context.EmployeeLogs.Where(x => x.EmployeeId.Equals(userID)).FirstOrDefaultAsync();
-
-                if (user.CheckInStatus == 1 && checkIn == 1 && user.DateLog.Contains(date.ToString("dd-MM-yyyy")))
+                if (HttpContext.Session.GetString("LoggedInUser") != null)
                 {
-                    //user already signed in
-                    TempData["AlreadyCheckedIn"] = "You are already checked in";
-                    return RedirectToAction("Index", "Home");
-                }
-                else if (user.CheckInStatus == 0 && checkIn == 1 && !user.DateLog.Contains(date.ToString("dd-MM-yyyy")))
-                {
-                    //sign in user
-                    //
-                    SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
-                    await conn.OpenAsync();
+                    DateTime date = DateTime.Now;
 
-                    string query = "INSERT INTO EMPLOYEE_LOG VALUES ("+userID+", '"+ date.ToShortTimeString() +"', '"+timeoutdummy+"', '"+date.ToString("dd-MM-yyyy")+"', "+checkIn+");";
+                    string timeoutdummy = "18:00";
 
-                    SqlCommand command = new SqlCommand(query, conn);
-                    SqlDataReader dataReader = await command.ExecuteReaderAsync();
+                    int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser"));
 
-                    await conn.CloseAsync();
-                    await command.DisposeAsync();
-                    await dataReader.CloseAsync();
+                    var user = await _context.EmployeeLogs.Where(x => x.EmployeeId.Equals(userID) && x.DateLog.Equals(date.ToString("dd-MM-yyyy"))).FirstOrDefaultAsync();
 
-                    TempData["CheckedIn"] = "You have been checked in";
+                    if (user.CheckInStatus == 1 && checkIn == 1 && user.DateLog.Contains(date.ToString("dd-MM-yyyy")))
+                    {
+                        //user already signed in
+                        TempData["AlreadyCheckedIn"] = "You are already checked in";
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else if (user.CheckInStatus == 0 && checkIn == 1 && user.DateLog.Equals(date.ToString("dd-MM-yyyy")))
+                    {
+                        //sign in user
+                        //
+                        SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+                        await conn.OpenAsync();
 
-                    return RedirectToAction("Index", "Home");
+                        string query = "UPDATE EMPLOYEE_LOG SET TIME_IN = '" + date.ToShortTimeString() + "', TIME_OUT = '" + timeoutdummy + "', CHECK_IN_STATUS = " + checkIn + " WHERE EMPLOYEE_ID = " + userID + " AND DATE_LOG = '" + date.ToString("dd-MM-yyyy") + "'";
 
-                }
-                else if (user.CheckInStatus == 1 && checkOut == 0)
-                {
-                    //sign out user
-                    TempData["SignOut"] = "You have been signed out";
+                        SqlCommand command = new SqlCommand(query, conn);
+                        SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-                    //Change checked in status to 0
-                    SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
-                    await conn.OpenAsync();
+                        await conn.CloseAsync();
+                        await command.DisposeAsync();
+                        await dataReader.CloseAsync();
 
-                    string query = "UPDATE EMPLOYEE_LOG SET CHECK_IN_STATUS = 0, TIME_OUT = '"+date.ToShortTimeString()+"' WHERE EMPLOYEE_LOG_NUMBER = "+user.EmployeeLogNumber+"";
+                        TempData["CheckedIn"] = "You have been checked in";
 
-                    SqlCommand command = new SqlCommand(query, conn);
-                    SqlDataReader dataReader = await command.ExecuteReaderAsync();
+                        return RedirectToAction("Index", "Home");
 
-                    await conn.CloseAsync();
-                    await command.DisposeAsync();
-                    await dataReader.CloseAsync();
+                    }
+                    else if (user.CheckInStatus == 1 && checkOut == 1)
+                    {
+                        //sign out user
+                        TempData["SignOut"] = "You have been signed out";
 
-                    return RedirectToAction("Index", "Home");
-                }
-                else if (user.CheckInStatus == 0 && checkOut == 0)
-                {
-                    //user already signed out
-                    return RedirectToAction("Index", "Home");
+                        //Change checked in status to 0
+                        SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+                        await conn.OpenAsync();
+
+                        string query = "UPDATE EMPLOYEE_LOG SET CHECK_IN_STATUS = 0, TIME_OUT = '" + date.ToShortTimeString() + "' WHERE EMPLOYEE_LOG_NUMBER = " + user.EmployeeLogNumber + "";
+
+                        SqlCommand command = new SqlCommand(query, conn);
+                        SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                        await conn.CloseAsync();
+                        await command.DisposeAsync();
+                        await dataReader.CloseAsync();
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else if (user.CheckInStatus == 0 && checkOut == 1)
+                    {
+                        //User already signed out
+                        TempData["AlreadySignedOut"] = "You are already signed out.";
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Employee");
                 }
             }
-            else
+            catch (Exception ex)
             {
+                TempData["Exception"] = ex.Message.ToString();
                 return RedirectToAction("Index", "Employee");
             }
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            TempData["LoggedOut"] = "You have been logged out, see you again soon!";
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -18,10 +18,14 @@
             <div class="card border-0 shadow my-5">
                 <div class="card-body p-5">
                     <div class="form-group text-center">
-                        <h3 class="font-weight-light text-center">@ViewBag.LoggedIn</h3>
-                        <div style="height: 125px"></div>
-                        <button name="checkIn" value="1" asp-action="CheckIn" asp-controller="Employee" formmethod="post">CHECK IN</button>
-                        <button name="checkOut" value="0" asp-action="CheckIn" asp-controller="Employee" formmethod="post">CHECK OUT</button>
+                        <h5 class="font-weight-light text-center">@ViewBag.LoggedIn</h5>
+                        <hr />
+                        <div style="height: 80px"></div>
+                        <h5 class="font-weight-light text-center">Choose Whether You Are Checking In or Checking Out:</h5>
+                        <br />
+                        <button name="checkIn" class="btn btn btn-outline-dark" value="1" asp-action="CheckIn" asp-controller="Employee" formmethod="post">CHECK IN</button>
+                        <button name="checkOut" class="btn btn btn-outline-dark" value="1" asp-action="CheckIn" asp-controller="Employee" formmethod="post">CHECK OUT</button>
+                        <div style="height: 80px"></div>
                     </div> 
                 </div>
             </div>

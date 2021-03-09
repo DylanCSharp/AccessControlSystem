@@ -17,18 +17,21 @@
         <div class="card border-0 shadow my-5">
             <div class="card-body p-5">
                 <h1 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h1>
-                <div style="height: 125px;"></div>
-                <h3>@TempData["AlreadyCheckedIn"]</h3>
-                <h3>@TempData["SignOut"]</h3>
-                <h3>@TempData["CheckedIn"]</h3>
+                <h5 class="font-weight-light text-center">@TempData["AlreadyCheckedIn"]</h5>
+                <h5 class="font-weight-light text-center">@TempData["SignOut"]</h5>
+                <h5 class="font-weight-light text-center">@TempData["CheckedIn"]</h5>
+                <h5 class="font-weight-light text-center">@TempData["AlreadySignedOut"]</h5>
+                <h5 class="font-weight-light text-center">@TempData["LoggedOut"]</h5>
+                <hr />
+                <div style="height: 98px;"></div>
                 <div class="form-group text-center">
                     <label for="inputEmployee">Are you part of our Staff or a Visitor?</label>
                     <br />
-                    <button type="submit" class="btn btn-outline-primary w-25" id="inputEmployee" value="1" formmethod="post" name="employee" required>Staff</button>
+                    <button type="submit" class="btn btn-outline-secondary w-25" id="inputEmployee" value="1" formmethod="post" name="employee" required>Staff</button>
                     <div style="height: 5px;"></div>
-                    <button type="submit" class="btn btn-outline-secondary w-25" id="inputVisitor" formmethod="post" name="visitor" required>Visitor</button>
+                    <button type="submit" class="btn btn-outline-dark w-25" id="inputVisitor" formmethod="post" name="visitor" required>Visitor</button>
                 </div>
-                <div style="height: 125px;"></div>
+                <div style="height: 110px;"></div>
             </div>
         </div>
     </div>
