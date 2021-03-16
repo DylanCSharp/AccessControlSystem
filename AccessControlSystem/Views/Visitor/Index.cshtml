@@ -1,5 +1,61 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<AccessControlSystem.Models.Employee>
 @{
+    ViewData["Title"] = "Visitor Access";
 }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Network Configurations&trade;</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card border-0 shadow my-5">
+            <div class="card-body p-5 form-group" >
+                <h1 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h1>
+                <h5 class="font-weight-light text-center"></h5>
+                <hr />
+                <form class="form-group">
+                    <label for="name">Enter your Name:</label>
+                    <input id="name" name="name" type="text" required class="form-control" />
+                    <br />
+                    <label for="reason">Reason for Visit:</label>
+                    <select id="reason" name="reason" class="form-control" required>
+                        <option selected disabled hidden>Choose...</option>
+                        <option>Meeting</option>
+                        <option>Visit</option>
+                        <option>Personal</option>
+                        <option>Other</option>
+                    </select>
+                    <br />
+                    <label for="whom">Whom are you visiting?</label>
+                    <select id="whom" name="whom" class="form-control" required>
+                        <option selected disabled hidden>Choose...</option>
+                        @foreach (var item in Model)
+                        {
+                            <option value="@item.EmployeeName">@item.EmployeeName</option>
+                        }
+                    </select>
+                    <br />
+                    <label for="picture">Please take a picture of yourself. This is for security reasons.</label>
+                    <br />
+                    <div class="custom-file" >
+                        <input type="file" class="custom-file-input" id="validatedCustomFile" name="file" required>
+                        <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                        <div class="invalid-feedback">Example invalid custom file feedback</div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="form-group text-center">
+                        <button type="submit" asp-action="Index" asp-controller="Visitor" formmethod="post" class="btn btn-outline-dark btn-lg">Submit</button>
+                    </div>
+                </form>
+        </div>
+    </div>
+    </div>
+</body>
+</html>
