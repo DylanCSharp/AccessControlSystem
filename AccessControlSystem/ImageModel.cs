@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AccessControlSystem.Models
+namespace AccessControlSystem
 {
     public class ImageModel
     {

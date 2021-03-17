@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<AccessControlSystem.Models.Employee>
 @{
     ViewData["Title"] = "Visitor Access";
+
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,10 +23,10 @@
                 <hr />
                 <form class="form-group">
                     <label for="name">Enter your Name:</label>
-                    <input id="name" name="name" type="text" required class="form-control" />
+                    <input id="name" name="strName" type="text" required class="form-control" />
                     <br />
                     <label for="reason">Reason for Visit:</label>
-                    <select id="reason" name="reason" class="form-control" required>
+                    <select id="reason" name="strReason" class="form-control" required>
                         <option selected disabled hidden>Choose...</option>
                         <option>Meeting</option>
                         <option>Visit</option>
@@ -33,7 +35,7 @@
                     </select>
                     <br />
                     <label for="whom">Whom are you visiting?</label>
-                    <select id="whom" name="whom" class="form-control" required>
+                    <select id="whom" name="strWhom" class="form-control" required>
                         <option selected disabled hidden>Choose...</option>
                         @foreach (var item in Model)
                         {
@@ -41,18 +43,12 @@
                         }
                     </select>
                     <br />
-                    <label for="picture">Please take a picture of yourself. This is for security reasons.</label>
-                    <br />
-                    <div class="custom-file" >
-                        <input type="file" class="custom-file-input" id="validatedCustomFile" name="file" required>
-                        <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
-                        <div class="invalid-feedback">Example invalid custom file feedback</div>
-                    </div>
-                    <br />
+                    <label class="text-center">Would you mind taking a picture of yourself? This is for security reasons.</label>
                     <br />
                     <div class="form-group text-center">
-                        <button type="submit" asp-action="Index" asp-controller="Visitor" formmethod="post" class="btn btn-outline-dark btn-lg">Submit</button>
+                        <button type="submit" asp-action="Index" asp-controller="Visitor" formmethod="post" class="btn btn-outline-dark btn-lg">Proceed to Picture</button>
                     </div>
+                    
                 </form>
         </div>
     </div>

@@ -1,0 +1,36 @@
+﻿@model ImageModel;
+@{
+    ViewData["Title"] = "Picture Time";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Network Configurations&trade;</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card border-0 shadow my-5">
+            <div class="card-body p-5 form-group">
+                <h1 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h1>
+                <h5 class="font-weight-light text-center"></h5>
+                <hr />
+                <form>
+                    <div class="mb-3">
+                        <label for="formFileSm" class="form-label">Choose a Picture</label>
+                        <input style="height: 50px" asp-for="ProfileImage" class="form-control form-control-sm" id="formFileSm" type="file">
+                    </div>
+                    <br />
+                    <div class="form-group text-center">
+                        <button type="submit" asp-action="Picture" asp-controller="Visitor" formmethod="post" class="btn btn-outline-dark btn-lg">Complete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
