@@ -5,12 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccessControlSystem.Controllers
@@ -55,44 +51,66 @@ namespace AccessControlSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Picture(ImageModel model)
+        public async Task<IActionResult> Picture(IFormFile file)
         {
-            DateTime date = DateTime.Now;
-
-            string fileName = model.ProfileImage.FileName;
-
-            BlobContainerClient container = new BlobContainerClient(_config.GetConnectionString("AccessBlobStorage"), "accesscontainer");
-
-            BlobClient blob = container.GetBlobClient(fileName);
-
-            string uploadFolder = Path.Combine(_hosting.WebRootPath, "img");
-
-            string filePath = Path.Combine(uploadFolder, fileName);
-
-            FileStream stream = new FileStream(filePath, FileMode.Create);
-            await model.ProfileImage.CopyToAsync(stream);
-            stream.Close();
-
-            using (var fileStream = System.IO.File.OpenRead(filePath))
+            try
             {
-                await blob.UploadAsync(fileStream);
+                if (ModelState.IsValid)
+                {
+                    DateTime date = DateTime.Now;
+
+                    string connectionString = _config.GetConnectionString("AccessBlobStorage");
+                    string fileName = file.FileName;
+                    string containerName = "visitorcontainer";
+
+                    BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
+
+                    BlobClient blob = container.GetBlobClient(fileName);
+
+                    string uploadFolder = Path.Combine(_hosting.WebRootPath, "img");
+
+                    string filePath = Path.Combine(uploadFolder, fileName);
+
+                    FileStream stream = new FileStream(filePath, FileMode.Create);
+                    await file.CopyToAsync(stream);
+                    stream.Close();
+
+                    using (var fileStream = System.IO.File.OpenRead(filePath))
+                    {
+                        await blob.UploadAsync(fileStream);
+                    }
+
+                    SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+
+                    await conn.OpenAsync();
+
+                    string blobUrl = "https://cvserverstorage.blob.core.windows.net/visitorcontainer/" + fileName + " ";
+
+                    //WORK TO GET BLOB STORAGE URL
+                    string query = "INSERT INTO VISITORS_LOG VALUES ('" + name + "', '" + reason + "', '" + whom + "', '" + date.ToShortTimeString() + " on " + date.ToLongDateString() + "', '" + blobUrl + "');";
+
+                    SqlCommand command = new SqlCommand(query, conn);
+                    SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                    await command.DisposeAsync();
+                    await dataReader.CloseAsync();
+                    await conn.CloseAsync();
+
+
+                    TempData["VisitorSuccess"] = "Your Visitor Ticket had been accepted, have a good day!";
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.Error = "Upload unsuccessful. Please try again";
+                    return View();
+                }
             }
-
-            SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
-
-            await conn.OpenAsync();
-
-            //WORK TO GET BLOB STORAGE URL
-            string query = "INSERT INTO VISITORS_LOG VALUES ('" + name + "', '" + reason + "', '" + whom + "', '" + date.ToShortTimeString() + " on " + date.ToLongDateString() + "', '" + model.ProfileImage + "');";
-
-            SqlCommand command = new SqlCommand(query, conn);
-            SqlDataReader dataReader = await command.ExecuteReaderAsync();
-
-            await command.DisposeAsync();
-            await dataReader.CloseAsync();
-            await conn.CloseAsync();
-
-            return RedirectToAction("Index", "Home");
+            catch (Exception)
+            {
+                TempData["Exception"] = "This picture already exists in storage, please rename your file before uploading it";
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace AccessControlSystem.Models
 {
     public class ErrorViewModel
