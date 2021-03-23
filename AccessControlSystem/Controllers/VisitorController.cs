@@ -84,9 +84,9 @@ namespace AccessControlSystem.Controllers
 
                     await conn.OpenAsync();
 
-                    string blobUrl = "https://cvserverstorage.blob.core.windows.net/visitorcontainer/" + fileName + " ";
+                    string blobUrl = "https://cvserverstorage.blob.core.windows.net/visitorcontainer/" + fileName + "";
 
-                    //WORK TO GET BLOB STORAGE URL
+                    ////WORK TO GET BLOB STORAGE URL
                     string query = "INSERT INTO VISITORS_LOG VALUES ('" + name + "', '" + reason + "', '" + whom + "', '" + date.ToShortTimeString() + " on " + date.ToLongDateString() + "', '" + blobUrl + "');";
 
                     SqlCommand command = new SqlCommand(query, conn);
