@@ -13,13 +13,13 @@ namespace AccessControlSystem.Controllers
 {
     public class VisitorController : Controller
     {
-        AccessControl _context;
-        IConfiguration _config;
-        IWebHostEnvironment _hosting;
+        readonly AccessControl _context;
+        readonly IConfiguration _config;
+        readonly IWebHostEnvironment _hosting;
 
-        public static string name;
-        public static string reason;
-        public static string whom;
+        static string name;
+        static string reason;
+        static string whom;
 
         public VisitorController(AccessControl context, IConfiguration configuration, IWebHostEnvironment hosting)
         {
@@ -30,24 +30,48 @@ namespace AccessControlSystem.Controllers
 
         public IActionResult Index()
         {
-            return View(_context.Employees);
+            try
+            {
+                return View(_context.Employees);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
         }
 
 
         [HttpPost]
         public IActionResult Index(string strName, string strReason, string strWhom)
         {
-            name = strName;
-            reason = strReason;
-            whom = strWhom;
+            try
+            {
+                name = strName;
+                reason = strReason;
+                whom = strWhom;
 
-            return RedirectToAction("Picture", "Visitor");
+                return RedirectToAction("Picture", "Visitor");
+            }
+            catch(Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
         }
 
         [HttpGet]
         public IActionResult Picture()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
         }
 
         [HttpPost]
@@ -55,54 +79,63 @@ namespace AccessControlSystem.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (file != null)
                 {
-                    DateTime date = DateTime.Now;
-
-                    string connectionString = _config.GetConnectionString("AccessBlobStorage");
-                    string fileName = file.FileName;
-                    string containerName = "visitorcontainer";
-
-                    BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
-
-                    BlobClient blob = container.GetBlobClient(fileName);
-
-                    string uploadFolder = Path.Combine(_hosting.WebRootPath, "img");
-
-                    string filePath = Path.Combine(uploadFolder, fileName);
-
-                    FileStream stream = new FileStream(filePath, FileMode.Create);
-                    await file.CopyToAsync(stream);
-                    stream.Close();
-
-                    using (var fileStream = System.IO.File.OpenRead(filePath))
+                    if (ModelState.IsValid)
                     {
-                        await blob.UploadAsync(fileStream);
+                        DateTime date = DateTime.Now;
+
+                        string connectionString = _config.GetConnectionString("AccessBlobStorage");
+                        string fileName = file.FileName;
+                        string containerName = "visitorcontainer";
+
+                        BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
+
+                        BlobClient blob = container.GetBlobClient(fileName);
+
+                        string uploadFolder = Path.Combine(_hosting.WebRootPath, "img");
+
+                        string filePath = Path.Combine(uploadFolder, fileName);
+
+                        FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate);
+                        await file.CopyToAsync(stream);
+
+                        using (var fileStream = System.IO.File.OpenRead(filePath))
+                        {
+                            await blob.UploadAsync(fileStream);
+                        }
+
+                        stream.Close();
+
+                        SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+
+                        await conn.OpenAsync();
+
+                        string blobUrl = "https://cvserverstorage.blob.core.windows.net/visitorcontainer/" + fileName + "";
+
+                        ////WORK TO GET BLOB STORAGE URL
+                        string query = "INSERT INTO VISITORS_LOG VALUES ('" + name + "', '" + reason + "', '" + whom + "', '" + date.ToShortTimeString() + " on " + date.ToLongDateString() + "', '" + blobUrl + "');";
+
+                        SqlCommand command = new SqlCommand(query, conn);
+                        SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                        await command.DisposeAsync();
+                        await dataReader.CloseAsync();
+                        await conn.CloseAsync();
+
+
+                        TempData["VisitorSuccess"] = "Your Visitor Ticket had been accepted, have a good day!";
+                        return RedirectToAction("Index", "Home");
                     }
-
-                    SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
-
-                    await conn.OpenAsync();
-
-                    string blobUrl = "https://cvserverstorage.blob.core.windows.net/visitorcontainer/" + fileName + "";
-
-                    ////WORK TO GET BLOB STORAGE URL
-                    string query = "INSERT INTO VISITORS_LOG VALUES ('" + name + "', '" + reason + "', '" + whom + "', '" + date.ToShortTimeString() + " on " + date.ToLongDateString() + "', '" + blobUrl + "');";
-
-                    SqlCommand command = new SqlCommand(query, conn);
-                    SqlDataReader dataReader = await command.ExecuteReaderAsync();
-
-                    await command.DisposeAsync();
-                    await dataReader.CloseAsync();
-                    await conn.CloseAsync();
-
-
-                    TempData["VisitorSuccess"] = "Your Visitor Ticket had been accepted, have a good day!";
-                    return RedirectToAction("Index", "Home");
+                    else
+                    {
+                        ViewBag.Error = "Upload unsuccessful. Please try again";
+                        return View();
+                    }
                 }
                 else
                 {
-                    ViewBag.Error = "Upload unsuccessful. Please try again";
+                    ViewBag.Error = "Something went wrong. Please try again";
                     return View();
                 }
             }

@@ -13,8 +13,8 @@ namespace AccessControlSystem.Controllers
 {
     public class EmployeeController : Controller
     {
-        IConfiguration _config;
-        AccessControl _context;
+        readonly IConfiguration _config;
+        readonly AccessControl _context;
 
         public EmployeeController(IConfiguration config, AccessControl context)
         {
@@ -25,7 +25,15 @@ namespace AccessControlSystem.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View(_context.Employees);
+            try
+            {
+                return View(_context.Employees);
+            }
+            catch (Exception ex) 
+            { 
+                ViewBag.Error = ex.Message; 
+                return View(); 
+            }
         }
 
         [HttpPost]
@@ -197,9 +205,17 @@ namespace AccessControlSystem.Controllers
 
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear();
-            TempData["LoggedOut"] = "You have been logged out, see you again soon!";
-            return RedirectToAction("Index", "Home");
+            try
+            {
+                HttpContext.Session.Clear();
+                TempData["LoggedOut"] = "You have been logged out, see you again soon!";
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
         }
     }
 }
