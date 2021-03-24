@@ -54,14 +54,14 @@ namespace AccessControlSystem.Controllers
 
                     DateTime date = DateTime.Now;
 
-                    string dummy = "00:00";
+                    string dummy = "18:00";
                     int checkInStatus = 0;
 
                     int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser"));
 
                     var employeeLog = await _context.EmployeeLogs.Where(x => x.EmployeeId.Equals(userID) && x.DateLog.Equals(date.ToString("dd-MM-yyyy"))).FirstOrDefaultAsync();
 
-                    if (employeeLog != null)
+                    if (employeeLog != null && employeeLog.CheckInStatus == 1)
                     {
                         ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
                         return View("CheckIn");
@@ -71,7 +71,7 @@ namespace AccessControlSystem.Controllers
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
                         await conn.OpenAsync();
 
-                        string query = "INSERT INTO EMPLOYEE_LOG VALUES (" + userID + ", '" + dummy + "', '" + dummy + "', '" + date.ToString("dd-MM-yyyy") + "', " + checkInStatus + ");";
+                        string query = "INSERT INTO EMPLOYEE_LOG VALUES (" + userID + ", '" + date.ToShortTimeString() + "', '" + dummy + "', '" + date.ToString("dd-MM-yyyy") + "', " + checkInStatus + ");";
 
                         SqlCommand command = new SqlCommand(query, conn);
                         SqlDataReader dataReader = await command.ExecuteReaderAsync();
