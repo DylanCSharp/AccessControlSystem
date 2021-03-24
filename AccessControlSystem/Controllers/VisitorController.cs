@@ -1,5 +1,6 @@
 ﻿using AccessControlSystem.Models;
 using Azure.Storage.Blobs;
+using Grpc.Core;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -47,11 +48,19 @@ namespace AccessControlSystem.Controllers
         {
             try
             {
-                name = strName;
-                reason = strReason;
-                whom = strWhom;
+                if (strName != "" && strReason != "" && strWhom != "")
+                {
+                    name = strName;
+                    reason = strReason;
+                    whom = strWhom;
 
-                return RedirectToAction("Picture", "Visitor");
+                    return RedirectToAction("Picture", "Visitor");
+                }
+                else
+                {
+                    ViewBag.Error = "Some values have not been entered, please try again";
+                    return View();
+                }
             }
             catch(Exception ex)
             {
@@ -79,14 +88,14 @@ namespace AccessControlSystem.Controllers
         {
             try
             {
-                if (file != null)
+                if (name != null && reason != null && whom != null && file != null)
                 {
                     if (ModelState.IsValid)
                     {
                         DateTime date = DateTime.Now;
 
                         string connectionString = _config.GetConnectionString("AccessBlobStorage");
-                        string fileName = file.FileName;
+                        string fileName = date.ToString("dd-MM-yyyy") + "@" +  date.ToShortTimeString() + file.FileName;
                         string containerName = "visitorcontainer";
 
                         BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
@@ -99,14 +108,12 @@ namespace AccessControlSystem.Controllers
 
                         FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate);
                         await file.CopyToAsync(stream);
+                        stream.Close();
 
                         using (var fileStream = System.IO.File.OpenRead(filePath))
                         {
                             await blob.UploadAsync(fileStream);
                         }
-
-                        stream.Close();
-
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
 
                         await conn.OpenAsync();
@@ -139,11 +146,13 @@ namespace AccessControlSystem.Controllers
                     return View();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Exception"] = "This picture already exists in storage, please rename your file before uploading it";
+                TempData["Exception"] = ex.Message;
                 return RedirectToAction("Index", "Home");
             }
         }
+
+
     }
 }

@@ -2,8 +2,8 @@
 @{
     ViewData["Title"] = "Picture Time";
 }
-@{
 
+@{
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -34,7 +34,7 @@
                                         <div id="idwebcam" class="img-fluid rounded"></div>
                                     </td>
                                     <td>
-                                        <img class="img-fluid rounded" id="idcaptured"/>
+                                        <img class="img-fluid rounded" id="idcaptured" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -42,40 +42,50 @@
                                         <br />
                                         <input type="button" class="btn btn-outline-dark text-center" id="btncapture" value="Capture Photo" />
                                     </td>
+                                    <td align="center">
+                                        <button class="btn btn-outline-dark">UPLOAD PHOTO</button>
+                                    </td>
                                 </tr>
                             </table>
+                        </div>
+                        <br />
+                            <div class="custom-file">
+                                <input type="file" class="form-control custom-file-input" name="file" required />
+                                <label class="custom-file-label">Choose a File...</label>
                             </div>
-                            <br />
-                            <br />
-                            <div class="form-group text-center">
-                                <button class="btn btn-outline-info" formmethod="post" type="submit">Complete</button>
-                            </div>
-                            @section Scripts {
-                                <script type="text/javascript">
+                        <br />
+                        <button class="btn btn-outline-dark" formmethod="post">Complete</button>
 
-                                    $('.custom-file-input').change(function () {
-                                        var filename = $(this).val().split('\\').pop();
-                                        $(this).next('.custom-file-label').html(filename);
-                                    })
+                        @section Scripts {
+                            <script type="text/javascript">
 
-                                    $(function () {
-                                        Webcam.set({
-                                            width: 360,
-                                            height: 260,
-                                            image_format: 'jpeg',
-                                            jpeg_quality: 90
-                                        });
-                                        Webcam.attach('#idwebcam');
+                                $('.custom-file-input').change(function () {
+                                    var filename = $(this).val().split('\\').pop();
+                                    $(this).next('.custom-file-label').html(filename);
+                                })
+
+                                $(function () {
+                                    Webcam.set({
+                                        width: 360,
+                                        height: 260,
+                                        image_format: 'jpeg',
+                                        jpeg_quality: 90
                                     });
+                                    Webcam.attach('#idwebcam');
+                                });
 
-                                    $("#btncapture").click(function () {
-                                        Webcam.snap(function (data_uri) {
-                                            $("#idcaptured")[0].src = data_uri;
-                                        });
+                                $("#btncapture").click(function () {
+                                    Webcam.snap(function (data_uri) {
+                                        $("#idcaptured")[0].src = data_uri;
+                                        $("#btnUpload").removeAttr("disabled");
+
+                                        src = $("#btncaptured")[0].src;
                                     });
+                                });
 
-                                </script>
-                            }
+
+                            </script>
+                        }
                     </form>
                 </div>
             </div>
