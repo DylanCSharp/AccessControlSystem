@@ -163,7 +163,7 @@ namespace AccessControlSystem.Controllers
                     else if (user.CheckInStatus == 1 && checkOut == 1)
                     {
                         //sign out user
-                        TempData["SignOut"] = "You have been signed out";
+                        TempData["SignOut"] = "You have been checked out";
 
                         //Change checked in status to 0
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
