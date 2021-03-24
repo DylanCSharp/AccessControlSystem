@@ -34,7 +34,7 @@
                                         <div id="idwebcam" class="img-fluid rounded"></div>
                                     </td>
                                     <td>
-                                        <img class="img-fluid rounded" id="idcaptured" />
+                                        <img id="idcaptured"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -42,18 +42,16 @@
                                         <br />
                                         <input type="button" class="btn btn-outline-dark text-center" id="btncapture" value="Capture Photo" />
                                     </td>
-                                    <td align="center">
-                                        <button class="btn btn-outline-dark">UPLOAD PHOTO</button>
-                                    </td>
                                 </tr>
                             </table>
                         </div>
                         <br />
                             <div class="custom-file">
-                                <input type="file" class="form-control custom-file-input" name="file" required />
-                                <label class="custom-file-label">Choose a File...</label>
+                                <input id="fileinput" type="file" class="form-control custom-file-input" name="file" required />
+                                <label class="custom-file-label">Choose your saved file...</label>
                             </div>
-                        <br />
+                        <br/>
+                        <br/>
                         <button class="btn btn-outline-dark" formmethod="post">Complete</button>
 
                         @section Scripts {
@@ -78,11 +76,10 @@
                                     Webcam.snap(function (data_uri) {
                                         $("#idcaptured")[0].src = data_uri;
                                         $("#btnUpload").removeAttr("disabled");
-
-                                        src = $("#btncaptured")[0].src;
                                     });
                                 });
 
+                                
 
                             </script>
                         }

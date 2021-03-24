@@ -95,7 +95,7 @@ namespace AccessControlSystem.Controllers
                         DateTime date = DateTime.Now;
 
                         string connectionString = _config.GetConnectionString("AccessBlobStorage");
-                        string fileName = date.ToString("dd-MM-yyyy") + "@" +  date.ToShortTimeString() + file.FileName;
+                        string fileName = Guid.NewGuid() + file.FileName;
                         string containerName = "visitorcontainer";
 
                         BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
@@ -106,7 +106,7 @@ namespace AccessControlSystem.Controllers
 
                         string filePath = Path.Combine(uploadFolder, fileName);
 
-                        FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate);
+                        FileStream stream = new FileStream(filePath, FileMode.Create);
                         await file.CopyToAsync(stream);
                         stream.Close();
 
