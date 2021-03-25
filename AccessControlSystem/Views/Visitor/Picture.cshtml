@@ -19,40 +19,42 @@
         <div class="container-fluid">
             <div class="card border-0 shadow my-5">
                 <div class="card-body p-5 form-group">
-                    <h1 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h1>
+                    <h3 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h3>
                     <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
                     <hr />
                     <form method="post" enctype="multipart/form-data">
+
                         <div class="table-responsive-xl">
-                            <table border="0" cellpadding="0" cellspacing="0">
+                            <table class="table">
                                 <tr>
-                                    <th scope="col" align="center">Live Camera</th>
-                                    <th scope="col" align="center">Captured Picture</th>
+                                    <th scope="col">Live Camera</th>
+                                    <th scope="col">Captured Picture</th>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <div id="idwebcam" class="img-fluid rounded"></div>
-                                    </td>
-                                    <td>
-                                        <img id="idcaptured"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <br />
-                                        <input type="button" class="btn btn-outline-dark text-center" id="btncapture" value="Capture Photo" />
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div id="idwebcam"></div>
+                                            <br />
+                                            <input type="button" class="btn btn-outline-dark text-center" id="btncapture" value="Capture Photo" />
+                                            <input type="button" id="btndownload" value="Download Photo" hidden />
+                                        </td>
+                                        <td>
+                                            <img id="idcaptured" />
+                                            <br />
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
-                        <br />
-                            <div class="custom-file">
-                                <input id="fileinput" type="file" class="form-control custom-file-input" name="file" required />
-                                <label class="custom-file-label">Choose your saved file...</label>
+                            <div class="custom-file text-center">
+                                <input id="fileinput" type="file" class="custom-file-input" name="file" required />
+                                <label class="custom-file-label">Upload the downloaded image...</label>
                             </div>
                         <br/>
                         <br/>
-                        <button class="btn btn-outline-dark" formmethod="post">Complete</button>
+                        <div class="text-center">
+                            <button class="btn btn-outline-dark" formmethod="post">Upload and Complete</button>
+                        </div>
 
                         @section Scripts {
                             <script type="text/javascript">
@@ -66,7 +68,7 @@
                                     Webcam.set({
                                         width: 360,
                                         height: 260,
-                                        image_format: 'jpeg',
+                                        image_format: 'png',
                                         jpeg_quality: 90
                                     });
                                     Webcam.attach('#idwebcam');
@@ -76,11 +78,18 @@
                                     Webcam.snap(function (data_uri) {
                                         $("#idcaptured")[0].src = data_uri;
                                         $("#btnUpload").removeAttr("disabled");
+                                        $("#btndownload").click();
                                     });
                                 });
 
+                                $("#btndownload").click(function () {
+                                    var image = document.getElementById('idcaptured');
+                                    var download = document.createElement("a");
+                                    download.href = image.src;
+                                    download.download = true;
+                                    download.click();
+                                });
                                 
-
                             </script>
                         }
                     </form>
