@@ -33,6 +33,7 @@ namespace AccessControlSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
+            
             ScryptEncoder scryptEncoder = new ScryptEncoder();
 
             usernameStatic = username;
@@ -41,6 +42,7 @@ namespace AccessControlSystem.Controllers
 
             bool isAdmin = scryptEncoder.Compare(password, admin.AdminHash);
 
+            //Checking admin login
             if (isAdmin)
             {
                 HttpContext.Session.SetString("LoggedInAdmin", admin.AdminId.ToString());
@@ -56,6 +58,7 @@ namespace AccessControlSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> VisitorLogs()
         {
+            //only allowing admins to view this view
             var admin = await _context.Admins.Where(x => x.AdminName.Equals(usernameStatic)).FirstOrDefaultAsync();
 
             if (HttpContext.Session.GetString("LoggedInAdmin") != null)

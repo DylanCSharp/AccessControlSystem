@@ -46,6 +46,7 @@ namespace AccessControlSystem.Controllers
                 var user = await _context.Employees.Where(x => x.EmployeeName.Equals(name)).FirstOrDefaultAsync();
 
                 ScryptEncoder scryptEncoder = new ScryptEncoder();
+
                 bool isValid = scryptEncoder.Compare(passcode, user.EmployeeHashCode);
 
                 if (isValid == true)
@@ -59,13 +60,16 @@ namespace AccessControlSystem.Controllers
 
                     int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser"));
 
+                    //Checking if employee id and date exist
                     var employeeLog = await _context.EmployeeLogs.Where(x => x.EmployeeId.Equals(userID) && x.DateLog.Equals(date.ToString("dd-MM-yyyy"))).FirstOrDefaultAsync();
 
+                    //if it does exist and check in status is checked in, welcome back
                     if (employeeLog != null && employeeLog.CheckInStatus == 1)
                     {
                         ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
                         return View("CheckIn");
                     }
+                    //if it does exist and theyre checked out, update the exisiting employeelog number with the time in
                     else if (employeeLog != null && employeeLog.CheckInStatus == 0)
                     {
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
@@ -83,6 +87,7 @@ namespace AccessControlSystem.Controllers
                         ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
                         return View("CheckIn");
                     }
+                    //if the user hasnt signed in for the day, insert a row into the table
                     else
                     {
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
@@ -119,6 +124,7 @@ namespace AccessControlSystem.Controllers
         {
             try
             {
+                //making sure the user is signed in before checking in or out
                 if (HttpContext.Session.GetString("LoggedInUser") != null)
                 {
                     return View();
@@ -152,16 +158,17 @@ namespace AccessControlSystem.Controllers
 
                     var user = await _context.EmployeeLogs.Where(x => x.EmployeeId.Equals(userID) && x.DateLog.Equals(date.ToString("dd-MM-yyyy"))).FirstOrDefaultAsync();
 
+                    //checking if the user is already checked in
                     if (user.CheckInStatus == 1 && checkIn == 1 && user.DateLog.Contains(date.ToString("dd-MM-yyyy")))
                     {
                         //user already signed in
                         ViewBag.AlreadySignedIn = "You are already checked in " + username.EmployeeName + "!";
                         return View();
                     }
+                    //if the user wants to check in but theyre not checked in, update their row in the table where the date equals today for specific employee id
                     else if (user.CheckInStatus == 0 && checkIn == 1 && user.DateLog.Equals(date.ToString("dd-MM-yyyy")))
                     {
                         //sign in user
-                        //
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
                         await conn.OpenAsync();
 
@@ -179,6 +186,7 @@ namespace AccessControlSystem.Controllers
                         return RedirectToAction("Index", "Home");
 
                     }
+                    //if user is checked in and wants to check out, check them out and update table
                     else if (user.CheckInStatus == 1 && checkOut == 1)
                     {
                         //sign out user
@@ -199,6 +207,7 @@ namespace AccessControlSystem.Controllers
 
                         return RedirectToAction("Index", "Home");
                     }
+                    //if the user is already checked out and they want to check out, tell them
                     else if (user.CheckInStatus == 0 && checkOut == 1)
                     {
                         //User already signed out
@@ -226,6 +235,7 @@ namespace AccessControlSystem.Controllers
         {
             try
             {
+                //Clearing the session so that someone else can login
                 HttpContext.Session.Clear();
                 TempData["LoggedOut"] = "You have been logged out.";
                 return RedirectToAction("Index", "Home");

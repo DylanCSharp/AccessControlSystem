@@ -48,6 +48,7 @@ namespace AccessControlSystem.Controllers
         {
             try
             {
+                //Making sure they input the values for later user
                 if (strName != "" && strReason != "" && strWhom != "")
                 {
                     name = strName;
@@ -88,6 +89,7 @@ namespace AccessControlSystem.Controllers
         {
             try
             {
+                //Making sure all variables have values
                 if (name != null && reason != null && whom != null && file != null)
                 {
                     if (ModelState.IsValid)
@@ -102,25 +104,29 @@ namespace AccessControlSystem.Controllers
 
                         BlobClient blob = container.GetBlobClient(fileName);
 
+                       
                         string uploadFolder = Path.Combine(_hosting.WebRootPath, "img");
 
                         string filePath = Path.Combine(uploadFolder, fileName);
 
+                        //uploading the image to the image folder within the project
                         FileStream stream = new FileStream(filePath, FileMode.Create);
                         await file.CopyToAsync(stream);
                         stream.Close();
 
+                        //uploading that file from the folder path to blob storage
                         using (var fileStream = System.IO.File.OpenRead(filePath))
                         {
                             await blob.UploadAsync(fileStream);
                         }
+
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
 
                         await conn.OpenAsync();
 
                         string blobUrl = "https://cvserverstorage.blob.core.windows.net/visitorcontainer/" + fileName + "";
 
-                        ////WORK TO GET BLOB STORAGE URL
+                        //adding blob url and visitor values to db
                         string query = "INSERT INTO VISITORS_LOG VALUES ('" + name + "', '" + reason + "', '" + whom + "', '" + date.ToShortTimeString() + " on " + date.ToLongDateString() + "', '" + blobUrl + "');";
 
                         SqlCommand command = new SqlCommand(query, conn);
