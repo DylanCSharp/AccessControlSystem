@@ -131,13 +131,15 @@ namespace AccessControlSystem.Controllers
 
                     int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser"));
 
+                    var username = await _context.Employees.Where(x => x.EmployeeId.Equals(userID)).FirstOrDefaultAsync();
+
                     var user = await _context.EmployeeLogs.Where(x => x.EmployeeId.Equals(userID) && x.DateLog.Equals(date.ToString("dd-MM-yyyy"))).FirstOrDefaultAsync();
 
                     if (user.CheckInStatus == 1 && checkIn == 1 && user.DateLog.Contains(date.ToString("dd-MM-yyyy")))
                     {
                         //user already signed in
-                        TempData["AlreadyCheckedIn"] = "You are already checked in";
-                        return RedirectToAction("Index", "Home");
+                        ViewBag.AlreadyCheckedIn = "You are already checked in " + username.EmployeeName + "!";
+                        return View();
                     }
                     else if (user.CheckInStatus == 0 && checkIn == 1 && user.DateLog.Equals(date.ToString("dd-MM-yyyy")))
                     {
@@ -183,8 +185,8 @@ namespace AccessControlSystem.Controllers
                     else if (user.CheckInStatus == 0 && checkOut == 1)
                     {
                         //User already signed out
-                        TempData["AlreadySignedOut"] = "You are already signed out.";
-                        return RedirectToAction("Index", "Home");
+                        ViewBag.AlreadyCheckedOut = "You are already signed out " + username.EmployeeName + "!";
+                        return View();
                     }
                     else
                     {
