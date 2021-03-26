@@ -66,6 +66,23 @@ namespace AccessControlSystem.Controllers
                         ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
                         return View("CheckIn");
                     }
+                    else if (employeeLog != null && employeeLog.CheckInStatus == 0)
+                    {
+                        SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+                        await conn.OpenAsync();
+
+                        string query = "UPDATE EMPLOYEE_LOG SET TIME_IN = '"+date.ToShortTimeString()+"', TIME_OUT = '"+dummy+"' WHERE EMPLOYEE_ID = "+userID+" AND DATE_LOG = '"+date.ToString("dd-MM-yyyy")+"'";
+
+                        SqlCommand command = new SqlCommand(query, conn);
+                        SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                        await conn.CloseAsync();
+                        await command.DisposeAsync();
+                        await dataReader.CloseAsync();
+
+                        ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
+                        return View("CheckIn");
+                    }
                     else
                     {
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
@@ -138,7 +155,7 @@ namespace AccessControlSystem.Controllers
                     if (user.CheckInStatus == 1 && checkIn == 1 && user.DateLog.Contains(date.ToString("dd-MM-yyyy")))
                     {
                         //user already signed in
-                        ViewBag.AlreadyCheckedIn = "You are already checked in " + username.EmployeeName + "!";
+                        ViewBag.AlreadySignedIn = "You are already checked in " + username.EmployeeName + "!";
                         return View();
                     }
                     else if (user.CheckInStatus == 0 && checkIn == 1 && user.DateLog.Equals(date.ToString("dd-MM-yyyy")))
