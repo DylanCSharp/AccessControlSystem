@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -15,6 +17,7 @@ namespace AccessControlSystem.Models
         {
         }
 
+        public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployeeLog> EmployeeLogs { get; set; }
         public virtual DbSet<VisitorsLog> VisitorsLogs { get; set; }
@@ -30,6 +33,25 @@ namespace AccessControlSystem.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
+
+            modelBuilder.Entity<Admin>(entity =>
+            {
+                entity.ToTable("ADMIN");
+
+                entity.Property(e => e.AdminId).HasColumnName("ADMIN_ID");
+
+                entity.Property(e => e.AdminHash)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("ADMIN_HASH");
+
+                entity.Property(e => e.AdminName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("ADMIN_NAME");
+            });
 
             modelBuilder.Entity<Employee>(entity =>
             {

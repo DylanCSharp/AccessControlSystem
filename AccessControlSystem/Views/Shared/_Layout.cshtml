@@ -16,8 +16,14 @@
                 
             </div>
             <ul class="nav-links">
-                <li><a asp-action="Index" asp-controller="Home">Check In</a></li>
-                @if (Context.Session.GetString("LoggedInUser") != null)
+                <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                <li><a asp-action="Login" asp-controller="Admin">Admin Check In</a></li>
+                <li><a asp-action="Index" asp-controller="Employee">Employee Check In</a></li>
+                @if (Context.Session.GetString("LoggedInAdmin") != null)
+                {
+                    <li><a asp-action="VisitorLogs" asp-controller="Admin">Check Visitor Logs</a></li>
+                }
+                @if (Context.Session.GetString("LoggedInUser") != null || Context.Session.GetString("LoggedInAdmin") != null)
                 {
                     <li><a asp-action="Logout" asp-controller="Employee">Logout</a></li>
                 }

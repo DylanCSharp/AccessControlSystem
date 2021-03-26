@@ -227,7 +227,7 @@ namespace AccessControlSystem.Controllers
             try
             {
                 HttpContext.Session.Clear();
-                TempData["LoggedOut"] = "You have been logged out, see you again soon!";
+                TempData["LoggedOut"] = "You have been logged out.";
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)

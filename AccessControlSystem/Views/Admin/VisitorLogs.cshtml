@@ -1,0 +1,65 @@
+﻿@model IEnumerable<AccessControlSystem.Models.VisitorsLog>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Network Configurations&trade;</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card border-0 shadow my-5">
+            <div class="card-body p-5 form-group">
+                <h1 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h1>
+                <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
+                <hr />
+                <div class="table-responsive-xl">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">
+                                    Visitor Name:
+                                </th>
+                                <th scope="col">
+                                    Visitor Reason:
+                                </th>
+                                <th scope="col">
+                                    Visitor saw Whom:
+                                </th>
+                                <th scope="col">
+                                    Time:
+                                </th>
+                                <th>Picture:</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VisitorName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VisitorReason)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VisitorSeeingWhom)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VisitorTimestamp)
+                                </td>
+                                <td>
+                                    <img class="img-fluid rounded" style="max-width: 100%; max-height: 150px; height:auto" src="@item.VisitorPictureUrl" />
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+        </div>
+    </div>
+</body>
+</html>

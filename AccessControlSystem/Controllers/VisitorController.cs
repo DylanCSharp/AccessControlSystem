@@ -153,6 +153,10 @@ namespace AccessControlSystem.Controllers
             }
         }
 
-
+        [HttpGet]
+        public IActionResult VisitorsLog()
+        {
+            return View(_context.VisitorsLogs);
+        }
     }
 }

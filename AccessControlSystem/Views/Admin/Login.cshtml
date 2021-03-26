@@ -1,0 +1,45 @@
+﻿@{ 
+    ViewData["Title"] = "Admin Login";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Network Configurations&trade;</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card border-0 shadow my-5">
+            <div class="card-body p-5 form-group">
+                <h1 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h1>
+                <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
+                <h5 class="font-weight-light text-center">@TempData["NotAdmin"]</h5>
+                <hr />
+                <form>
+                    <div class="form-group">
+                        <label for="inputEmail">Admin Username</label>
+                        <input type="text" class="form-control" id="inputEmail" aria-describedby="emailHelp" name="username" onfocusout="this.value = removeSpaces(this.value);" required>
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">Admin Password</label>
+                        <input type="password" class="form-control" id="inputPassword" name="password" onfocusout="this.value = removeSpaces(this.value);" required>
+                    </div>
+                    <div class="text-md-center text-sm-center text-lg-center">
+                        <button type="submit" formmethod="post" class="btn-login btn btn-outline-dark">LOGIN</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script language="javascript" type="text/javascript">
+        function removeSpaces(string) {
+            return string.split(' ').join('');
+        }
+    </script>
+</body>
+</html>
