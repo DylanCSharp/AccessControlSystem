@@ -121,29 +121,45 @@ namespace AccessControlSystem.Controllers
         [HttpGet]
         public IActionResult EmployeeList()
         {
-            if (HttpContext.Session.GetString("LoggedInAdmin") != null)
+            try
             {
-                return View(_context.Employees);
+                if (HttpContext.Session.GetString("LoggedInAdmin") != null)
+                {
+                    return View(_context.Employees);
+                }
+                else
+                {
+                    TempData["NotAdmin"] = "You need to be admin to access this page";
+                    return RedirectToAction("Login", "Admin");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["NotAdmin"] = "You need to be admin to access this page";
-                return RedirectToAction("Login", "Admin");
+                ViewBag.Error = ex.Message;
+                return View();
             }
         }
 
         [HttpPost]
         public IActionResult EmployeeList(int id)
         {
-            if (HttpContext.Session.GetString("LoggedInAdmin") != null)
+            try
             {
-                empid = id;
-                return RedirectToAction("EmployeeHistory", "Admin");
+                if (HttpContext.Session.GetString("LoggedInAdmin") != null)
+                {
+                    empid = id;
+                    return RedirectToAction("EmployeeHistory", "Admin");
+                }
+                else
+                {
+                    TempData["NotAdmin"] = "You need to be admin to access this page";
+                    return RedirectToAction("Login", "Admin");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["NotAdmin"] = "You need to be admin to access this page";
-                return RedirectToAction("Login", "Admin");
+                ViewBag.Error = ex.Message;
+                return View();
             }
         }
 

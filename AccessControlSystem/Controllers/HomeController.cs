@@ -21,12 +21,5 @@ namespace AccessControlSystem.Controllers
                 return RedirectToAction("Index", "Visitor");
             }
         }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-
     }
 }
