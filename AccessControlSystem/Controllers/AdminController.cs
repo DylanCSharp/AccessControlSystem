@@ -33,7 +33,6 @@ namespace AccessControlSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            
             ScryptEncoder scryptEncoder = new ScryptEncoder();
 
             usernameStatic = username;
@@ -46,13 +45,19 @@ namespace AccessControlSystem.Controllers
             if (isAdmin)
             {
                 HttpContext.Session.SetString("LoggedInAdmin", admin.AdminId.ToString());
-                return RedirectToAction("VisitorLogs", "Admin");
+                return View("Dashboard");
             }
             else
             {
                 ViewBag.Error = "Username and password do not match!";
                 return View();
             }   
+        }
+
+        [HttpGet]
+        public IActionResult Dashboard()
+        {
+            return View();
         }
 
         [HttpGet]
