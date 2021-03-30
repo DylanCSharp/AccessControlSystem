@@ -1,0 +1,60 @@
+﻿@model IEnumerable<AccessControlSystem.Models.Employee>
+
+@{
+    ViewData["Title"] = "Employee List";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Network Configurations&trade;</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card border-0 shadow my-5">
+            <div class="card-body p-5 form-group">
+                <h1 class="font-weight-light text-center">List of our Employees</h1>
+                <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
+                <div class="table-responsive-xl">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    Employee Name:
+                                </th>
+                                <th scope="col">
+                                    
+                                </th>
+                                <th scope="col">
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmployeeName)
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                    <td>
+                                        <form>
+                                            <button class="btn btn-dark btn-lg" formmethod="post" name="id" value="@item.EmployeeId">View Employee History</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

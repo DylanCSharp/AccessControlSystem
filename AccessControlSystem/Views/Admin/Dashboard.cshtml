@@ -15,38 +15,38 @@
     <div class="container-fluid">
         <div class="card border-0 shadow my-5">
             <div class="card-body p-5 form-group">
-                <h1 class="font-weight-light text-center">Admin Dashboard</h1>
+                <h1 class="font-weight-light text-center">Welcome to the Dashboard</h1>
+                <br />
                 <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
-                <hr />
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm">
                             <div class="card" style="width: 18rem;">
-                                <img src="..." class="card-img-top" alt="...">
+                                <img src="~/lib/bootstrap/dist/img/employee.png" class="card-img-top" alt="Employee Feed">
                                 <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                    <h5 class="card-title">Employee List</h5>
+                                    <p class="card-text">View employees a their check in/out times</p>
+                                    <a asp-action="EmployeeList" asp-controller="Admin" class="btn btn-primary">View Page</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="card" style="width: 18rem;">
-                                <img src="..." class="card-img-top" alt="...">
+                                <img src="~/lib/bootstrap/dist/img/visitor.png" class="card-img-top" alt="Visitor">
                                 <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                    <h5 class="card-title">Visitor History</h5>
+                                    <p class="card-text">Check visitor history and details of the visitor</p>
+                                    <a asp-action="VisitorLogs" asp-controller="Admin" class="btn btn-primary">View Page</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="card" style="width: 18rem;">
-                                <img src="..." class="card-img-top" alt="...">
+                                <img src="~/lib/bootstrap/dist/img/employeecheck.png" class="card-img-top" alt="...">
                                 <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                    <h5 class="card-title">Employee History</h5>
+                                    <p class="card-text">A summary of which employees have been attending work</p>
+                                    <a href="#" class="btn btn-primary">View Page</a>
                                 </div>
                             </div>
                         </div>
