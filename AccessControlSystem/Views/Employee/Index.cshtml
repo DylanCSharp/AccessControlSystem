@@ -19,6 +19,7 @@
                     <h2 class="font-weight-light text-center">Welcome back to Network Configurations&trade;</h2>
                     <h5 class="font-weight-light text-center">@TempData["Invalid"]</h5>
                     <h5 class="font-weight-light text-center">@TempData["Exception"]</h5>
+                    <h5 class="font-weight-light text-center">@TempData["SignedIn"]</h5>
                     <hr />
                     <div class="form-group text-center">
                         <label for="empName">Choose an Employee Name:</label>
@@ -34,10 +35,10 @@
                         <label for="inputEmployee">Enter your 4-Digit Employee Pass Code:</label>
                         <br />
                         <div class="form-wrap">
-                        <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="one" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
-                        <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="two" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
-                        <input type="password"style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="three" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
-                        <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="four" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
+                            <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="one" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
+                            <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="two" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
+                            <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="three" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
+                            <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="four" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
                         </div>
                         <br />
                         <button type="submit" class="btn btn-lg btn-outline-dark" formmethod="post">Login</button>

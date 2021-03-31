@@ -75,7 +75,7 @@ namespace AccessControlSystem.Controllers
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
                         await conn.OpenAsync();
 
-                        string query = "UPDATE EMPLOYEE_LOG SET TIME_IN = '"+date.ToShortTimeString()+"', TIME_OUT = '"+dummy+"' WHERE EMPLOYEE_ID = "+userID+" AND DATE_LOG = '"+date.ToString("dd-MM-yyyy")+"'";
+                        string query = "UPDATE EMPLOYEE_LOG SET TIME_OUT = '"+dummy+"' WHERE EMPLOYEE_ID = "+userID+" AND DATE_LOG = '"+date.ToString("dd-MM-yyyy")+"'";
 
                         SqlCommand command = new SqlCommand(query, conn);
                         SqlDataReader dataReader = await command.ExecuteReaderAsync();
@@ -172,7 +172,7 @@ namespace AccessControlSystem.Controllers
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
                         await conn.OpenAsync();
 
-                        string query = "UPDATE EMPLOYEE_LOG SET TIME_IN = '" + date.ToShortTimeString() + "', TIME_OUT = '" + timeoutdummy + "', CHECK_IN_STATUS = " + checkIn + " WHERE EMPLOYEE_ID = " + userID + " AND DATE_LOG = '" + date.ToString("dd-MM-yyyy") + "'";
+                        string query = "UPDATE EMPLOYEE_LOG SET TIME_OUT = '" + timeoutdummy + "', CHECK_IN_STATUS = " + checkIn + " WHERE EMPLOYEE_ID = " + userID + " AND DATE_LOG = '" + date.ToString("dd-MM-yyyy") + "'";
 
                         SqlCommand command = new SqlCommand(query, conn);
                         SqlDataReader dataReader = await command.ExecuteReaderAsync();
@@ -216,11 +216,13 @@ namespace AccessControlSystem.Controllers
                     }
                     else
                     {
+
                         return RedirectToAction("Index", "Home");
                     }
                 }
                 else
                 {
+                    TempData["SignIn"] = "You need to log in first";
                     return RedirectToAction("Index", "Employee");
                 }
             }
