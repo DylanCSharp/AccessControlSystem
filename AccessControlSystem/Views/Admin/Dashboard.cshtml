@@ -13,40 +13,40 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div class="card border-0 shadow my-5">
-            <div class="card-body p-5 form-group">
-                <h1 class="font-weight-light text-center">Welcome to the Dashboard</h1>
+        <div class="card border-0 shadow my-5" style="min-height: 78vh;">
+            <div class="card-body p-5 form-group justify-content-center align-self-center">
+                <h2 class="font-weight-light text-center">Welcome to the Dashboard</h2>
                 <br />
                 <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm">
-                            <div class="card" style="width: 18rem;">
-                                <img src="~/lib/bootstrap/dist/img/employee.png" class="card-img-top" alt="Employee Feed">
+                            <div class="card" style="width: auto;">
+                                <img src="~/lib/bootstrap/dist/img/employee.png" class="card-img-top img-fluid" alt="Employee list">
                                 <div class="card-body">
                                     <h5 class="card-title">Employee List</h5>
                                     <p class="card-text">View employees a their check in/out times</p>
-                                    <a asp-action="EmployeeList" asp-controller="Admin" class="btn btn-primary">View Page</a>
+                                    <a asp-action="EmployeeList" asp-controller="Admin" class="btn btn-secondary">View Page</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm">
-                            <div class="card" style="width: 18rem;">
-                                <img src="~/lib/bootstrap/dist/img/visitor.png" class="card-img-top" alt="Visitor">
+                            <div class="card" style="width: auto;">
+                                <img src="~/lib/bootstrap/dist/img/visitor.png" class="card-img-top img-fluid" alt="Visitors">
                                 <div class="card-body">
                                     <h5 class="card-title">Visitor History</h5>
                                     <p class="card-text">Check visitor history and details of the visitor</p>
-                                    <a asp-action="VisitorLogs" asp-controller="Admin" class="btn btn-primary">View Page</a>
+                                    <a asp-action="VisitorLogs" asp-controller="Admin" class="btn btn-secondary">View Page</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm">
-                            <div class="card" style="width: 18rem;">
-                                <img src="~/lib/bootstrap/dist/img/employeecheck.png" class="card-img-top" alt="...">
+                            <div class="card" style="width: auto;">
+                                <img src="~/lib/bootstrap/dist/img/employeecheck.png" class="card-img-top img-fluid" alt="Statistics">
                                 <div class="card-body">
-                                    <h5 class="card-title">Employee History</h5>
-                                    <p class="card-text">A summary of which employees have been attending work</p>
-                                    <a href="#" class="btn btn-primary">View Page</a>
+                                    <h5 class="card-title">Statistics</h5>
+                                    <p class="card-text">A summary of the in's and out's of Net Configs&trade; Employees</p>
+                                    <a asp-action="" class="btn btn-secondary">View Page</a>
                                 </div>
                             </div>
                         </div>

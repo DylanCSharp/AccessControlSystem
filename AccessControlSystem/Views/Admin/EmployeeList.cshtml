@@ -14,26 +14,24 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div class="card border-0 shadow my-5">
-            <div class="card-body p-5 form-group">
-                <h1 class="font-weight-light text-center">List of our Employees</h1>
+        <div class="card border-0 shadow my-5" style="min-height: 78vh;">
+            <div class="card-body p-5 form-group justify-content-center" style="margin-top: 12vh">
+                <h2 class="font-weight-light text-center">List of our Employees</h2>
                 <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
+                <br />
                 <div class="table-responsive-xl">
                     <table class="table">
-                        <thead>
                             <tr>
                                 <th scope="col">
                                     Employee Name:
                                 </th>
                                 <th scope="col">
-                                    
+                                    Employee Address:
                                 </th>
                                 <th scope="col">
 
                                 </th>
                             </tr>
-                        </thead>
-                        <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
@@ -41,16 +39,15 @@
                                         @Html.DisplayFor(modelItem => item.EmployeeName)
                                     </td>
                                     <td>
-                                        
+                                        @Html.DisplayFor(modelItem => item.EmployeeAddress)
                                     </td>
                                     <td>
                                         <form>
-                                            <button class="btn btn-dark btn-lg" formmethod="post" name="id" value="@item.EmployeeId">View Employee History</button>
+                                            <button class="btn btn-dark" formmethod="post" name="id" value="@item.EmployeeId">View Attendance History</button>
                                         </form>
                                     </td>
                                 </tr>
                             }
-                        </tbody>
                     </table>
                 </div>
                 </div>

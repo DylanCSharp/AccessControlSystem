@@ -19,7 +19,7 @@ nav {
 }
 
 header {
-    margin-bottom: 125px;
+    margin-bottom: 17vh;
 }
 
 .logo {
@@ -70,6 +70,14 @@ header {
         letter-spacing: 2px;
         font-size: 14px;
         padding-left: 20px;
+    }
+
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        letter-spacing: 2px;
+        font-weight: bold;
+        font-size: 9px;
     }
 
     .burger {
@@ -142,8 +150,9 @@ header {
 }
 
 body {
-    background: url("../lib/bootstrap/dist/img/encryp.jpg") no-repeat center center fixed;
+    background: url(../lib/bootstrap/dist/img/background.jpg) no-repeat center center fixed;
     background-size: cover;
 }
+
 
 

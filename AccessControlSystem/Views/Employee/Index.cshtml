@@ -14,38 +14,34 @@
 <body>
     <form>
         <div class="container-fluid">
-            <div class="card border-0 shadow my-5">
-                <div class="card-body p-5">
-                    <h1 class="font-weight-light text-center">Welcome back to Network Configurations&trade;</h1>
-                    <div style="height: 12px;"></div>
+            <div class="card border-0 shadow my-5" style="min-height: 78vh;">
+                <div class="card-body p-5 justify-content-center align-self-center" style="margin-top: 10vh">
+                    <h2 class="font-weight-light text-center">Welcome back to Network Configurations&trade;</h2>
                     <h5 class="font-weight-light text-center">@TempData["Invalid"]</h5>
                     <h5 class="font-weight-light text-center">@TempData["Exception"]</h5>
                     <hr />
-                    <div style="height: 20px;"></div>
                     <div class="form-group text-center">
                         <label for="empName">Choose an Employee Name:</label>
                         <br />
-                        <select class="form-select btn-outline-info w-25 rounded" style="height: 40px;" id="empName" name="name">
+                        <select class="form-select btn-outline-info rounded" style="min-width: 28.5vh; max-width: 35vh; min-height: 5vh;" id="empName" name="name">
                             @foreach (var item in Model)
                             {
                                 <option value="@item.EmployeeName">@item.EmployeeName</option>
                             }
                         </select>
-                        <div style="height: 12px;"></div>
+                        <br />
                         <br />
                         <label for="inputEmployee">Enter your 4-Digit Employee Pass Code:</label>
                         <br />
                         <div class="form-wrap">
-                        <input type="password" name="one" maxlength="1" style="width: 58px; height: 40px; font-size: 40px; text-align: center;" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
-                        <input type="password" name="two" maxlength="1" style="width: 58px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
-                        <input type="password" name="three" maxlength="1" style="width: 58px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
-                        <input type="password" name="four" maxlength="1" style="width: 58px; height: 40px; font-size: 40px; text-align: center" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
+                        <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="one" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
+                        <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="two" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
+                        <input type="password"style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="three" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required/>
+                        <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="four" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
                         </div>
                         <br />
-                        <div style="height: 12px;"></div>
-                        <button type="submit" class="btn btn-outline-dark w-25" formmethod="post">Login</button>
+                        <button type="submit" class="btn btn-lg btn-outline-dark" formmethod="post">Login</button>
                     </div>
-                    <div style="height: 20px;"></div>
                 </div>
             </div>
         </div>

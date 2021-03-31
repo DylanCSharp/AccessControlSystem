@@ -13,9 +13,9 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div class="card border-0 shadow my-5">
-            <div class="card-body p-5 form-group">
-                <h1 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h1>
+        <div class="card border-0 shadow my-5" style="min-height: 78vh;">
+            <div class="card-body p-5 form-group justify-content-center" style="margin-top: 10vh">
+                <h2 class="font-weight-light text-center">Welcome to Network Configurations&trade;</h2>
                 <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
                 <h5 class="font-weight-light text-center">@TempData["NotAdmin"]</h5>
                 <hr />
@@ -30,7 +30,7 @@
                         <input type="password" class="form-control" id="inputPassword" name="password" onfocusout="this.value = removeSpaces(this.value);" required>
                     </div>
                     <div class="text-md-center text-sm-center text-lg-center">
-                        <button type="submit" formmethod="post" class="btn-login btn btn-outline-dark">LOGIN</button>
+                        <button type="submit" formmethod="post" class="btn-lg btn btn-outline-dark">LOGIN</button>
                     </div>
                 </form>
             </div>

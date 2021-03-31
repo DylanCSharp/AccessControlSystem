@@ -13,15 +13,24 @@
         <nav class="fixed-top">
             <div class="logo">
                 <label>Network Configurations&trade;</label>
-                
             </div>
             <ul class="nav-links">
                 <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-                <li><a asp-action="Login" asp-controller="Admin">Admin Login</a></li>
-                <li><a asp-action="Index" asp-controller="Employee">Employee Check In</a></li>
+                @if (Context.Session.GetString("LoggedInAdmin") == null)
+                {
+                    <li><a asp-action="Login" asp-controller="Admin">Admin Login</a></li>
+                }
                 @if (Context.Session.GetString("LoggedInAdmin") != null)
                 {
                     <li><a asp-action="Dashboard" asp-controller="Admin">Admin Dashboard</a></li>
+                }
+                @if (Context.Session.GetString("LoggedInUser") == null)
+                {
+                    <li><a asp-action="Index" asp-controller="Employee">Employee Login</a></li>
+                }
+                else
+                {
+                    <li><a asp-action="CheckIn" asp-controller="Employee">Employee Check In/Out</a></li>
                 }
                 @if (Context.Session.GetString("LoggedInUser") != null || Context.Session.GetString("LoggedInAdmin") != null)
                 {

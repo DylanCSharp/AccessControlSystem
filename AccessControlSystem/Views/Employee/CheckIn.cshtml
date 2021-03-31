@@ -15,19 +15,21 @@
 <body>
     <form>
         <div class="container-fluid">
-            <div class="card border-0 shadow my-5">
-                <div class="card-body p-5">
+            <div class="card border-0 shadow my-5" style="min-height: 78vh;">
+                <div class="card-body p-5 justify-content-center align-self-center" style="margin-top: 20vh;">
                     <div class="form-group text-center">
+                        @if (ViewBag.LoggedIn == "" || ViewBag.LoggedIn == null)
+                        {
+                            <h3 class="font-weight-light text-center">Welcome Back</h3>
+                        }
                         <h3 class="font-weight-light text-center">@ViewBag.LoggedIn</h3>
                         <h3 class="font-weight-light text-center">@ViewBag.AlreadySignedIn</h3>
                         <h3 class="font-weight-light text-center">@ViewBag.AlreadyCheckedOut</h3>
                         <hr />
-                        <div style="height: 80px"></div>
                         <h5 class="font-weight-light text-center">Are you Checking In or Checking Out?</h5>
                         <br />
                         <button name="checkIn" class="btn btn btn-outline-dark" value="1" asp-action="CheckIn" asp-controller="Employee" formmethod="post">CHECKING IN</button>
                         <button name="checkOut" class="btn btn btn-outline-dark" value="1" asp-action="CheckIn" asp-controller="Employee" formmethod="post">CHECKING OUT</button>
-                        <div style="height: 80px"></div>
                     </div> 
                 </div>
             </div>
