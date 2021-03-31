@@ -16,6 +16,9 @@ namespace AccessControlSystem.Controllers
         readonly IConfiguration _config;
         readonly AccessControl _context;
 
+        //REMEMBER TO NOT ALLOW THE USERS TO CHECK IN AFTER 18:00, THEY MUST LOG AN OVERTIME TICKET INSTEAD
+
+
         public EmployeeController(IConfiguration config, AccessControl context)
         {
             _config = config;
@@ -158,66 +161,74 @@ namespace AccessControlSystem.Controllers
 
                     var user = await _context.EmployeeLogs.Where(x => x.EmployeeId.Equals(userID) && x.DateLog.Equals(date.ToString("dd-MM-yyyy"))).FirstOrDefaultAsync();
 
-                    //checking if the user is already checked in
-                    if (user.CheckInStatus == 1 && checkIn == 1 && user.DateLog.Contains(date.ToString("dd-MM-yyyy")))
+                    if (date.Hour > 6 && date.Minute > 0 && date.Second > 0)
                     {
-                        //user already signed in
-                        ViewBag.AlreadySignedIn = "You are already checked in " + username.EmployeeName + "!";
-                        return View();
-                    }
-                    //if the user wants to check in but theyre not checked in, update their row in the table where the date equals today for specific employee id
-                    else if (user.CheckInStatus == 0 && checkIn == 1 && user.DateLog.Equals(date.ToString("dd-MM-yyyy")))
-                    {
-                        //sign in user
-                        SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
-                        await conn.OpenAsync();
-
-                        string query = "UPDATE EMPLOYEE_LOG SET TIME_OUT = '" + timeoutdummy + "', CHECK_IN_STATUS = " + checkIn + " WHERE EMPLOYEE_ID = " + userID + " AND DATE_LOG = '" + date.ToString("dd-MM-yyyy") + "'";
-
-                        SqlCommand command = new SqlCommand(query, conn);
-                        SqlDataReader dataReader = await command.ExecuteReaderAsync();
-
-                        await conn.CloseAsync();
-                        await command.DisposeAsync();
-                        await dataReader.CloseAsync();
-
-                        TempData["CheckedIn"] = "You have been checked in";
-
-                        return RedirectToAction("Index", "Home");
-
-                    }
-                    //if user is checked in and wants to check out, check them out and update table
-                    else if (user.CheckInStatus == 1 && checkOut == 1)
-                    {
-                        //sign out user
-                        TempData["SignOut"] = "You have been checked out";
-
-                        //Change checked in status to 0
-                        SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
-                        await conn.OpenAsync();
-
-                        string query = "UPDATE EMPLOYEE_LOG SET CHECK_IN_STATUS = 0, TIME_OUT = '" + date.ToShortTimeString() + "' WHERE EMPLOYEE_LOG_NUMBER = " + user.EmployeeLogNumber + "";
-
-                        SqlCommand command = new SqlCommand(query, conn);
-                        SqlDataReader dataReader = await command.ExecuteReaderAsync();
-
-                        await conn.CloseAsync();
-                        await command.DisposeAsync();
-                        await dataReader.CloseAsync();
-
-                        return RedirectToAction("Index", "Home");
-                    }
-                    //if the user is already checked out and they want to check out, tell them
-                    else if (user.CheckInStatus == 0 && checkOut == 1)
-                    {
-                        //User already signed out
-                        ViewBag.AlreadyCheckedOut = "You are already signed out " + username.EmployeeName + "!";
-                        return View();
+                        TempData["TimeExceeded"] = "You cannot check in now, you have to log an overtime ticket";
+                        return RedirectToAction("OvertimeTicket", "Employee");
                     }
                     else
                     {
+                        //checking if the user is already checked in
+                        if (user.CheckInStatus == 1 && checkIn == 1 && user.DateLog.Contains(date.ToString("dd-MM-yyyy")))
+                        {
+                            //user already signed in
+                            ViewBag.AlreadySignedIn = "You are already checked in " + username.EmployeeName + "!";
+                            return View();
+                        }
+                        //if the user wants to check in but theyre not checked in, update their row in the table where the date equals today for specific employee id
+                        else if (user.CheckInStatus == 0 && checkIn == 1 && user.DateLog.Equals(date.ToString("dd-MM-yyyy")))
+                        {
+                            //sign in user
+                            SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+                            await conn.OpenAsync();
 
-                        return RedirectToAction("Index", "Home");
+                            string query = "UPDATE EMPLOYEE_LOG SET TIME_OUT = '" + timeoutdummy + "', CHECK_IN_STATUS = " + checkIn + " WHERE EMPLOYEE_ID = " + userID + " AND DATE_LOG = '" + date.ToString("dd-MM-yyyy") + "'";
+
+                            SqlCommand command = new SqlCommand(query, conn);
+                            SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                            await conn.CloseAsync();
+                            await command.DisposeAsync();
+                            await dataReader.CloseAsync();
+
+                            TempData["CheckedIn"] = "You have been checked in";
+
+                            return RedirectToAction("Index", "Home");
+
+                        }
+                        //if user is checked in and wants to check out, check them out and update table
+                        else if (user.CheckInStatus == 1 && checkOut == 1)
+                        {
+                            //sign out user
+                            TempData["SignOut"] = "You have been checked out";
+
+                            //Change checked in status to 0
+                            SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+                            await conn.OpenAsync();
+
+                            string query = "UPDATE EMPLOYEE_LOG SET CHECK_IN_STATUS = 0, TIME_OUT = '" + date.ToShortTimeString() + "' WHERE EMPLOYEE_LOG_NUMBER = " + user.EmployeeLogNumber + "";
+
+                            SqlCommand command = new SqlCommand(query, conn);
+                            SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                            await conn.CloseAsync();
+                            await command.DisposeAsync();
+                            await dataReader.CloseAsync();
+
+                            return RedirectToAction("Index", "Home");
+                        }
+                        //if the user is already checked out and they want to check out, tell them
+                        else if (user.CheckInStatus == 0 && checkOut == 1)
+                        {
+                            //User already signed out
+                            ViewBag.AlreadyCheckedOut = "You are already signed out " + username.EmployeeName + "!";
+                            return View();
+                        }
+                        else
+                        {
+
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
                 }
                 else
@@ -225,6 +236,7 @@ namespace AccessControlSystem.Controllers
                     TempData["SignIn"] = "You need to log in first";
                     return RedirectToAction("Index", "Employee");
                 }
+                
             }
             catch (Exception ex)
             {
