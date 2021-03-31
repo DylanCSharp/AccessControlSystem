@@ -248,5 +248,17 @@ namespace AccessControlSystem.Controllers
                 return View();
             }
         }
+
+        [HttpGet]
+        public IActionResult OvertimeTicket()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult OvertimeTicket(string name, string reason, int extraHours, int declaration)
+        {
+            return View();
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace AccessControlSystem.Models
         public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployeeLog> EmployeeLogs { get; set; }
+        public virtual DbSet<OvertimeTicket> OvertimeTickets { get; set; }
         public virtual DbSet<VisitorsLog> VisitorsLogs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -112,6 +113,48 @@ namespace AccessControlSystem.Models
                     .WithMany(p => p.EmployeeLogs)
                     .HasForeignKey(d => d.EmployeeId)
                     .HasConstraintName("FK__EMPLOYEE___Emplo__286302EC");
+            });
+
+            modelBuilder.Entity<OvertimeTicket>(entity =>
+            {
+                entity.HasKey(e => e.TicketNum)
+                    .HasName("PK__OVERTIME__8133569460E96376");
+
+                entity.ToTable("OVERTIME_TICKETS");
+
+                entity.Property(e => e.TicketNum).HasColumnName("TICKET_NUM");
+
+                entity.Property(e => e.ApprovedByWhom)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("APPROVED_BY_WHOM");
+
+                entity.Property(e => e.Declaration)
+                    .IsRequired()
+                    .HasMaxLength(5)
+                    .IsUnicode(false)
+                    .HasColumnName("DECLARATION");
+
+                entity.Property(e => e.EmployeeName)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("EMPLOYEE_NAME");
+
+                entity.Property(e => e.OvertimeHours).HasColumnName("OVERTIME_HOURS");
+
+                entity.Property(e => e.OvertimeReason)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("OVERTIME_REASON");
+
+                entity.Property(e => e.TicketApproved)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("TICKET_APPROVED");
             });
 
             modelBuilder.Entity<VisitorsLog>(entity =>
