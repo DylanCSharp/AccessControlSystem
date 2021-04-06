@@ -282,7 +282,7 @@ namespace AccessControlSystem.Controllers
             }
             else
             {
-                TempData["NotOvertime"] = "You cannot create an overtime ticket or you are not logged in. It is not past 6pm.";
+                TempData["NotOvertime"] = "You cannot create an overtime ticket. It is not past 6pm.";
                 return RedirectToAction("EmployeeDashboard", "Employee");
             }
         }
