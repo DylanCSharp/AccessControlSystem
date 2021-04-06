@@ -30,7 +30,7 @@
                 }
                 else
                 {
-                    <li><a asp-action="CheckIn" asp-controller="Employee">Employee Check In/Out</a></li>
+                    <li><a asp-action="EmployeeDashboard" asp-controller="Employee">Employee Dashboard</a></li>
                 }
                 @if (Context.Session.GetString("LoggedInUser") != null || Context.Session.GetString("LoggedInAdmin") != null)
                 {

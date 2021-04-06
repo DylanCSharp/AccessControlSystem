@@ -18,13 +18,10 @@
             <div class="card border-0 shadow my-5" style="min-height: 78vh;">
                 <div class="card-body p-5 justify-content-center align-self-center" style="margin-top: 20vh;">
                     <div class="form-group text-center">
-                        @if (ViewBag.LoggedIn == "" || ViewBag.LoggedIn == null)
-                        {
-                            <h3 class="font-weight-light text-center">Welcome Back</h3>
-                        }
-                        <h3 class="font-weight-light text-center">@ViewBag.LoggedIn</h3>
-                        <h3 class="font-weight-light text-center">@ViewBag.AlreadySignedIn</h3>
-                        <h3 class="font-weight-light text-center">@ViewBag.AlreadyCheckedOut</h3>
+                        <h2 class="font-weight-light text-center">Welcome Back</h2>
+                        <h4 class="font-weight-light text-center">@ViewBag.LoggedIn</h4>
+                        <h4 class="font-weight-light text-center">@ViewBag.AlreadySignedIn</h4>
+                        <h4 class="font-weight-light text-center">@ViewBag.AlreadyCheckedOut</h4>
                         <hr />
                         <h5 class="font-weight-light text-center">Are you Checking In or Checking Out?</h5>
                         <br />

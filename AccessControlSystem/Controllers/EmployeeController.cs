@@ -69,8 +69,8 @@ namespace AccessControlSystem.Controllers
                     //if it does exist and check in status is checked in, welcome back
                     if (employeeLog != null && employeeLog.CheckInStatus == 1)
                     {
-                        ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
-                        return View("CheckIn");
+                        ViewBag.LoggedIn = "" + user.EmployeeName;
+                        return View("EmployeeDashboard");
                     }
                     //if it does exist and theyre checked out, update the exisiting employeelog number with the time in
                     else if (employeeLog != null && employeeLog.CheckInStatus == 0)
@@ -87,8 +87,8 @@ namespace AccessControlSystem.Controllers
                         await command.DisposeAsync();
                         await dataReader.CloseAsync();
 
-                        ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
-                        return View("CheckIn");
+                        ViewBag.LoggedIn = "" + user.EmployeeName;
+                        return View("EmployeeDashboard");
                     }
                     //if the user hasnt signed in for the day, insert a row into the table
                     else
@@ -105,8 +105,8 @@ namespace AccessControlSystem.Controllers
                         await command.DisposeAsync();
                         await dataReader.CloseAsync();
 
-                        ViewBag.LoggedIn = "Welcome back " + user.EmployeeName;
-                        return View("CheckIn");
+                        ViewBag.LoggedIn = "" + user.EmployeeName;
+                        return View("EmployeeDashboard");
                     }
                 }
                 else
@@ -134,6 +134,7 @@ namespace AccessControlSystem.Controllers
                 }
                 else
                 {
+                    TempData["LoginFirst"] = "You need to login first to access this page";
                     return RedirectToAction("Index", "Employee");
                 }
             }
@@ -161,9 +162,9 @@ namespace AccessControlSystem.Controllers
 
                     var user = await _context.EmployeeLogs.Where(x => x.EmployeeId.Equals(userID) && x.DateLog.Equals(date.ToString("dd-MM-yyyy"))).FirstOrDefaultAsync();
 
-                    if (date.Hour > 6 && date.Minute > 0 && date.Second > 0)
+                    if (date.Hour >= 18 && date.Minute > 0 && date.Second > 0)
                     {
-                        TempData["TimeExceeded"] = "You cannot check in now, you have to log an overtime ticket";
+                        TempData["TimeExceeded"] = "You cannot check in/out now, you have to log an overtime ticket";
                         return RedirectToAction("OvertimeTicket", "Employee");
                     }
                     else
@@ -192,16 +193,12 @@ namespace AccessControlSystem.Controllers
                             await dataReader.CloseAsync();
 
                             TempData["CheckedIn"] = "You have been checked in";
-
-                            return RedirectToAction("Index", "Home");
+                            return RedirectToAction("EmployeeDashboard", "Employee");
 
                         }
                         //if user is checked in and wants to check out, check them out and update table
                         else if (user.CheckInStatus == 1 && checkOut == 1)
                         {
-                            //sign out user
-                            TempData["SignOut"] = "You have been checked out";
-
                             //Change checked in status to 0
                             SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
                             await conn.OpenAsync();
@@ -215,25 +212,26 @@ namespace AccessControlSystem.Controllers
                             await command.DisposeAsync();
                             await dataReader.CloseAsync();
 
-                            return RedirectToAction("Index", "Home");
+                            //sign out user
+                            TempData["SignedOut"] = "You have been checked out";
+                            return RedirectToAction("EmployeeDashboard", "Employee");
                         }
                         //if the user is already checked out and they want to check out, tell them
                         else if (user.CheckInStatus == 0 && checkOut == 1)
                         {
                             //User already signed out
                             ViewBag.AlreadyCheckedOut = "You are already signed out " + username.EmployeeName + "!";
-                            return View();
+                            return View("CheckIn");
                         }
                         else
                         {
-
                             return RedirectToAction("Index", "Home");
                         }
                     }
                 }
                 else
                 {
-                    TempData["SignIn"] = "You need to log in first";
+                    TempData["LoginFirst"] = "You need to login first to access this page";
                     return RedirectToAction("Index", "Employee");
                 }
                 
@@ -262,13 +260,35 @@ namespace AccessControlSystem.Controllers
         }
 
         [HttpGet]
+        public IActionResult EmployeeDashboard()
+        {
+            if (HttpContext.Session.GetString("LoggedInUser") != null)
+            {
+                return View();
+            }
+            else
+            {
+                TempData["LoginFirst"] = "You need to login first to access this page";
+                return RedirectToAction("Index", "Employee");
+            }
+        }
+
+        [HttpGet]
         public IActionResult OvertimeTicket()
         {
-            return View();
+            if (HttpContext.Session.GetString("LoggedInUser") != null && DateTime.Now.Hour >= 18 && DateTime.Now.Minute > 0 && DateTime.Now.Second > 0)
+            {
+                return View();
+            }
+            else
+            {
+                TempData["NotOvertime"] = "You cannot create an overtime ticket or you are not logged in. It is not past 6pm.";
+                return RedirectToAction("EmployeeDashboard", "Employee");
+            }
         }
 
         [HttpPost]
-        public IActionResult OvertimeTicket(string name, string reason, int extraHours, int declaration)
+        public IActionResult OvertimeTicket(int? id)
         {
             return View();
         }

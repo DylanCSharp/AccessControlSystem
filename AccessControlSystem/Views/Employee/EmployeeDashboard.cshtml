@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Employee Dashboard";
 }
 
 <!DOCTYPE html>
@@ -15,37 +15,40 @@
     <div class="container-fluid">
         <div class="card border-0 shadow my-5" style="min-height: 78vh;">
             <div class="card-body p-5 form-group justify-content-center align-self-center">
-                <h2 class="font-weight-light text-center">Welcome to the Dashboard</h2>
-                <br />
+                <h2 class="font-weight-light text-center">Welcome to the Employee Dashboard @ViewBag.LoggedIn</h2>
                 <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
+                <h5 class="font-weight-light text-center">@TempData["CheckedIn"]</h5>
+                <h5 class="font-weight-light text-center">@TempData["SignedOut"]</h5>
+                <h5 class="font-weight-light text-center">@TempData["NotOvertime"]</h5>
+                <br />
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm">
                             <div class="card" style="width: auto;">
-                                <img src="~/lib/bootstrap/dist/img/employee.png" class="card-img-top img-fluid" alt="Employee list">
+                                <img src="~/lib/bootstrap/dist/img//checkin.png" class="card-img-top img-fluid">
                                 <div class="card-body">
-                                    <h5 class="card-title">Employee List</h5>
-                                    <p class="card-text">View employees and check their in/out times</p>
-                                    <a asp-action="EmployeeList" asp-controller="Admin" class="btn btn-secondary">View Page</a>
+                                    <h5 class="card-title">Check In or Out</h5>
+                                    <p class="card-text">Gives you the option to check in or out</p>
+                                    <a asp-action="CheckIn" asp-controller="Employee" class="btn btn-secondary">View Page</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="card" style="width: auto;">
-                                <img src="~/lib/bootstrap/dist/img/visitor.png" class="card-img-top img-fluid" alt="Visitors">
+                                <img src="~/lib/bootstrap/dist/img/overtime.png" class="card-img-top img-fluid" alt="Overtime">
                                 <div class="card-body">
-                                    <h5 class="card-title">Visitor History</h5>
-                                    <p class="card-text">Check visitor history and details of the visitor</p>
-                                    <a asp-action="VisitorLogs" asp-controller="Admin" class="btn btn-secondary">View Page</a>
+                                    <h5 class="card-title">Log Overtime</h5>
+                                    <p class="card-text">Gives you the option to log an overtime ticket</p>
+                                    <a asp-action="OvertimeTicket" asp-controller="Employee" class="btn btn-secondary">View Page</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="card" style="width: auto;">
-                                <img src="~/lib/bootstrap/dist/img/employeecheck.png" class="card-img-top img-fluid" alt="Overtime">
+                                <img src="~/lib/bootstrap/dist/img/history.png" class="card-img-top img-fluid" style="max-height: 40vh;" alt="OvertimeHistory">
                                 <div class="card-body">
-                                    <h5 class="card-title">Overtime Tickets</h5>
-                                    <p class="card-text">Overtime Tickets created by Net Config&trade; Employees</p>
+                                    <h5 class="card-title">Overtime Ticket History</h5>
+                                    <p class="card-text">View your Overtime History and see if they have been approved</p>
                                     <a asp-action="Statistics" asp-controller="Admin" class="btn btn-secondary">View Page</a>
                                 </div>
                             </div>
@@ -55,5 +58,5 @@
             </div>
         </div>
     </div>
-    </body>
+</body>
 </html>
