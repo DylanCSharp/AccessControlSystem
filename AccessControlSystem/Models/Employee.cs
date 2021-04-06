@@ -10,6 +10,7 @@ namespace AccessControlSystem.Models
         public Employee()
         {
             EmployeeLogs = new HashSet<EmployeeLog>();
+            OvertimeTickets = new HashSet<OvertimeTicket>();
         }
 
         public int EmployeeId { get; set; }
@@ -18,5 +19,6 @@ namespace AccessControlSystem.Models
         public string EmployeeAddress { get; set; }
 
         public virtual ICollection<EmployeeLog> EmployeeLogs { get; set; }
+        public virtual ICollection<OvertimeTicket> OvertimeTickets { get; set; }
     }
 }
