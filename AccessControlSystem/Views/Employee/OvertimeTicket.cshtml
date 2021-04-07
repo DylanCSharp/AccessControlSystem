@@ -19,6 +19,7 @@
                 <h2 class="font-weight-light text-center">Its Overtime! Clock in those extra hours</h2>
                 <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
                 <h5 class="font-weight-light text-center">@TempData["TimeExceeded"]</h5>
+                <h5 class="font-weight-light text-center">@TempData["OvertimeLogged"]</h5>
                 <hr />
                 <br />
                 <form class="form-group text-center">
@@ -31,8 +32,8 @@
                     <label for="select">Permission from which admin</label>
                     <br />
                     <select class="form-control" name="askedAdmin">
-                        @foreach (var item in Model) 
-                        { 
+                        @foreach (var item in Model)
+                        {
                             <option>@item.AdminName</option>
                         }
                         <option>Did not ask an admin</option>
