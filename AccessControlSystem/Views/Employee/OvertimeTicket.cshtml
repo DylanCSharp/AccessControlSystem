@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<AccessControlSystem.Models.Admin>
+@{
     ViewData["Title"] = "Overtime Ticket";
 }
 
@@ -14,18 +15,39 @@
 <body>
     <div class="container-fluid">
         <div class="card border-0 shadow my-5" style="min-height: 78vh;">
-            <div class="card-body p-5 form-group justify-content-center" style="margin-top: 10vh">
+            <div class="card-body p-5 form-group justify-content-center">
                 <h2 class="font-weight-light text-center">Its Overtime! Clock in those extra hours</h2>
                 <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
                 <h5 class="font-weight-light text-center">@TempData["TimeExceeded"]</h5>
-                <form>
-                    <input type="text" name="reason"/>
-                    <br />
-                    <input type="number" name="hours"/>
-                    <br />
-                    @*Declaration of honesty for submitting certain hours*@
-                </form>
                 <hr />
+                <br />
+                <form class="form-group text-center">
+                    <label for="reas">Reason for Overtime</label>
+                    <textarea id="reas" type="text" class="form-control text-center" name="reason" maxlength="150" required></textarea>
+                    <br />
+                    <label for="hour">Amount of Overtime Hours</label>
+                    <input id="hour" type="number" class="form-control text-center" name="hours" required />
+                    <br />
+                    <label for="select">Permission from which admin</label>
+                    <br />
+                    <select class="form-control" name="askedAdmin">
+                        @foreach (var item in Model) 
+                        { 
+                            <option>@item.AdminName</option>
+                        }
+                        <option>Did not ask an admin</option>
+                    </select>
+                    <br />
+                    <label for="dec">Agree with Declaration of Honesty</label>
+                    <br />
+                    <small>Warning, admins will see this document and any dishonesty regarding hours will not be tolerated and your ticket may be revoked.</small>
+                    <br />
+                    <br />
+                    <input id="dec" type="checkbox" style="height:3.5vh; width: 3.5vh;" class="align-content-center" name="declaration" value="true" required />
+                    <br />
+                    <br />
+                    <button class="btn btn-secondary btn-lg" formmethod="post" asp-action="OvertimeTicket" asp-controller="Employee">Finish</button>
+                </form>
             </div>
         </div>
     </div>

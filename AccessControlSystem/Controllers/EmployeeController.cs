@@ -276,9 +276,9 @@ namespace AccessControlSystem.Controllers
         [HttpGet]
         public IActionResult OvertimeTicket()
         {
-            if (HttpContext.Session.GetString("LoggedInUser") != null && DateTime.Now.Hour >= 18 && DateTime.Now.Minute > 0 && DateTime.Now.Second > 0)
+            if (HttpContext.Session.GetString("LoggedInUser") != null && DateTime.Now.Hour >= 15 && DateTime.Now.Minute > 0 && DateTime.Now.Second > 0)
             {
-                return View();
+                return View(_context.Admins);
             }
             else
             {
@@ -288,9 +288,11 @@ namespace AccessControlSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult OvertimeTicket(int? id)
+        public IActionResult OvertimeTicket(string reason, int hours, string declaration, string askedAdmin)
         {
-            return View();
+            DateTime date = DateTime.Now;
+            TempData["OvertimeLogged"] = "Your overtime ticket has been submitted and is pending on admin approval";
+            return RedirectToAction("EmployeeDashboard", "Employee");
         }
     }
 }

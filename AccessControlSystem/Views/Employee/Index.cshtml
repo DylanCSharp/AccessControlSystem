@@ -12,9 +12,8 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <form>
-        <div class="container-fluid">
-            <div class="card border-0 shadow my-5" style="min-height: 78vh;">
+      <div class="container-fluid">
+           <div class="card border-0 shadow my-5" style="min-height: 78vh;">
                 <div class="card-body p-5 justify-content-center align-self-center" style="margin-top: 15vh">
                     <h2 class="font-weight-light text-center">Welcome back to Network Configurations&trade;</h2>
                     <h5 class="font-weight-light text-center">@TempData["Invalid"]</h5>
@@ -22,6 +21,7 @@
                     <h5 class="font-weight-light text-center">@TempData["SignedIn"]</h5>
                     <h5 class="font-weight-light text-center">@TempData["LoginFirst"]</h5>
                     <hr />
+                    <form>
                     <div class="form-group text-center">
                         <label for="empName">Choose an Employee Name:</label>
                         <br />
@@ -36,17 +36,45 @@
                         <label for="inputEmployee">Enter your 4-Digit Employee Pass Code:</label>
                         <br />
                         <div class="form-wrap">
-                            <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="one" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
-                            <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="two" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
-                            <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="three" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
-                            <input type="password" style="min-height: 5vh; max-width: 7vh; text-align: center; font-size: 24px; font-weight: bold" name="four" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required />
+                            <input id="txb1" type="password" pattern="[1-9]+" style="min-height: 5vh; max-width: 6.5vh; text-align: center; font-size: 24px; font-weight: bold" name="one" maxlength="1" required />
+                            <input id="txb2" type="password" style="min-height: 5vh; max-width: 6.5vh; text-align: center; font-size: 24px; font-weight: bold" name="two" maxlength="1" required />
+                            <input id="txb3" type="password" style="min-height: 5vh; max-width: 6.5vh; text-align: center; font-size: 24px; font-weight: bold" name="three" maxlength="1" required />
+                            <input id="txb4" type="password" style="min-height: 5vh; max-width: 6.5vh; text-align: center; font-size: 24px; font-weight: bold" name="four" maxlength="1" required />
                         </div>
                         <br />
                         <button type="submit" class="btn btn-lg btn-outline-dark" formmethod="post">Login</button>
+                        </div>
+                        </form>
                     </div>
                 </div>
-            </div>
-        </div>
-    </form>
+           </div>
+    <script type="text/javascript">
+        document.getElementById('txb1').oninput = function () {
+            if (this.value.length == this.maxLength) {
+                document.getElementById('txb2').focus();
+            }
+        }
+        document.getElementById('txb2').oninput = function () {
+            if (this.value.length == this.maxLength) {
+                document.getElementById('txb3').focus();
+            }
+        }
+        document.getElementById('txb3').oninput = function () {
+            if (this.value.length == this.maxLength) {
+                document.getElementById('txb4').focus();
+            }
+        }
+       
+
+        window.addEventListener("keydown", function (e) {
+            if (e.keyCode === 8) {
+                if (this.document.getElementById('txb4')) {
+                    this.document.getElementById('txb4').value = null;
+                    document.getElementById('txb3').focus();
+                }
+            }
+        });
+        
+    </script>
 </body>
 </html>
