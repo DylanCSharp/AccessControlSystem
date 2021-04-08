@@ -1,7 +1,7 @@
-﻿@{
+﻿@model IEnumerable<AccessControlSystem.Models.OvertimeTicket>
+@{
     ViewData["Title"] = "Logged Overtime Tickets";
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +18,47 @@
                 <h2 class="font-weight-light text-center">Welcome to the Employee Dashboard @ViewBag.LoggedIn</h2>
                 <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
                 <br />
+                <div class="table-responsive-xl">
+                    <table class="table">
+                        <tr>
+                            <th scope="col">
+                                Ticket Date:
+                            </th>
+                            <th scope="col">
+                                Ticket Hours:
+                            </th>
+                            <th scope="col">
+                                Declaration Complete:
+                            </th>
+                            <th scope="col">
+                                Ticket Approved:
+                            </th>
+                            <th scope="col">
+                                Approved by whom:
+                            </th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketHours) hour(s)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Declaration)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Approved)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ApprovedByWhom)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
             </div>
         </div>
     </div>
