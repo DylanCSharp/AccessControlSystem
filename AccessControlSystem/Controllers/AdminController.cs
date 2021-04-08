@@ -8,6 +8,7 @@ using AccessControlSystem.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 
 namespace AccessControlSystem.Controllers
 {
@@ -188,9 +189,54 @@ namespace AccessControlSystem.Controllers
         }
 
         [HttpGet]
-        public IActionResult Statistics()
+        public IActionResult OvertimeRequests()
         {
-            return View();
+            if (HttpContext.Session.GetString("LoggedInAdmin") != null)
+            {
+                return View(_context.OvertimeTickets);
+            }
+            else
+            {
+                TempData["NotAdmin"] = "You need to be admin to access this page";
+                return RedirectToAction("Login", "Admin");
+            }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Overtime(bool ticketStatus)
+        {
+            DateTime date = DateTime.Now;
+
+            int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInAdmin"));
+
+            var adminName = await _context.Admins.Where(x => x.AdminId.Equals(userID)).FirstOrDefaultAsync();
+
+            string approved;
+            if (ticketStatus == true)
+            {
+                approved = "APPROVED";
+            }
+            else
+            {
+                approved = "NOT APPROVED";
+            }
+
+            //SQL UPDATES STUFF
+            SqlConnection conn = new SqlConnection();
+            await conn.OpenAsync();
+
+            string query = "UPDATE OVERTIME_TICKETS SET APPROVED = '"+approved+"' WHERE EMPLOYEE_ID = "+userID+" AND TICKET_DATE = '"+date.ToString("dd-MM-yyyy")+"'";
+
+            SqlCommand command = new SqlCommand(query, conn);
+            SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+            await conn.CloseAsync();
+            await command.DisposeAsync();
+            await dataReader.CloseAsync();
+
+
+            return RedirectToAction("Dashboard", "Admin");
+        }
+
     }
 }

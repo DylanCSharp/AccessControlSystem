@@ -28,9 +28,6 @@
                                 Ticket Hours:
                             </th>
                             <th scope="col">
-                                Declaration Complete:
-                            </th>
-                            <th scope="col">
                                 Ticket Approved:
                             </th>
                             <th scope="col">
@@ -44,10 +41,7 @@
                                     @Html.DisplayFor(modelItem => item.TicketDate)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.TicketHours) hour(s)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Declaration)
+                                    @Html.DisplayFor(modelItem => item.TicketHours) HOUR(s)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Approved)
