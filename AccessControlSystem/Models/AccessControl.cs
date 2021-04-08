@@ -27,7 +27,6 @@ namespace AccessControlSystem.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-
             }
         }
 
@@ -118,11 +117,29 @@ namespace AccessControlSystem.Models
             modelBuilder.Entity<OvertimeTicket>(entity =>
             {
                 entity.HasKey(e => e.TicketNum)
-                    .HasName("PK__OVERTIME__81335694D156787F");
+                    .HasName("PK__OVERTIME__813356946D2C49F5");
 
-                entity.ToTable("OVERTIME_TICKET");
+                entity.ToTable("OVERTIME_TICKETS");
 
                 entity.Property(e => e.TicketNum).HasColumnName("TICKET_NUM");
+
+                entity.Property(e => e.Approved)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("APPROVED");
+
+                entity.Property(e => e.ApprovedByWhom)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("APPROVED_BY_WHOM");
+
+                entity.Property(e => e.AskedPermission)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("ASKED_PERMISSION");
 
                 entity.Property(e => e.Declaration)
                     .IsRequired()
@@ -138,40 +155,28 @@ namespace AccessControlSystem.Models
                     .IsUnicode(false)
                     .HasColumnName("REASON");
 
-                entity.Property(e => e.TicketApproved)
-                    .IsRequired()
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("TICKET_APPROVED");
-
-                entity.Property(e => e.TicketApprovedByWhom)
-                    .IsRequired()
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("TICKET_APPROVED_BY_WHOM");
-
                 entity.Property(e => e.TicketDate)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("TICKET_DATE");
 
-                entity.Property(e => e.TimeEnd)
+                entity.Property(e => e.TicketHours)
                     .IsRequired()
-                    .HasMaxLength(50)
+                    .HasMaxLength(5)
                     .IsUnicode(false)
-                    .HasColumnName("TIME_END");
+                    .HasColumnName("TICKET_HOURS");
 
-                entity.Property(e => e.TimeStart)
+                entity.Property(e => e.TicketLogTime)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
-                    .HasColumnName("TIME_START");
+                    .HasColumnName("TICKET_LOG_TIME");
 
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.OvertimeTickets)
                     .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK__OVERTIME___EMPLO__3A81B327");
+                    .HasConstraintName("FK__OVERTIME___EMPLO__3D5E1FD2");
             });
 
             modelBuilder.Entity<VisitorsLog>(entity =>

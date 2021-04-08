@@ -20,6 +20,7 @@
                 <h5 class="font-weight-light text-center">@TempData["CheckedIn"]</h5>
                 <h5 class="font-weight-light text-center">@TempData["SignedOut"]</h5>
                 <h5 class="font-weight-light text-center">@TempData["NotOvertime"]</h5>
+                <h5 class="font-weight-light text-center">@TempData["OvertimeLogged"]</h5>
                 <br />
                 <div class="container-fluid">
                     <div class="row">
@@ -49,7 +50,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Overtime Ticket History</h5>
                                     <p class="card-text">View your Overtime History and see if they have been approved</p>
-                                    <a asp-action="Statistics" asp-controller="Admin" class="btn btn-secondary">View Page</a>
+                                    <a asp-action="LoggedTickets" asp-controller="Employee" class="btn btn-secondary">View Page</a>
                                 </div>
                             </div>
                         </div>

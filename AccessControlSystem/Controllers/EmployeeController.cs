@@ -276,7 +276,7 @@ namespace AccessControlSystem.Controllers
         [HttpGet]
         public IActionResult OvertimeTicket()
         {
-            if (HttpContext.Session.GetString("LoggedInUser") != null && DateTime.Now.Hour >= 18 && DateTime.Now.Minute > 0 && DateTime.Now.Second > 0)
+            if (HttpContext.Session.GetString("LoggedInUser") != null && DateTime.Now.Hour >= 13 && DateTime.Now.Minute > 0 && DateTime.Now.Second > 0)
             {
                 return View(_context.Admins);
             }
@@ -288,11 +288,67 @@ namespace AccessControlSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult OvertimeTicket(string reason, int hours, string declaration, string askedAdmin)
+        public async Task<IActionResult> OvertimeTicket(string reason, int hours, string declaration, string askedAdmin)
         {
-            DateTime date = DateTime.Now;
-            TempData["OvertimeLogged"] = "Your overtime ticket has been submitted and is pending on admin approval";
-            return RedirectToAction("EmployeeDashboard", "Employee");
+            try
+            {
+                if (hours > 13)
+                {
+                    ViewBag.TooMany = "It is not possible to work that much overtime. Work times are from 7am to 6pm";
+                    return View(_context.Admins);
+                }
+                else
+                {
+                    DateTime date = DateTime.Now;
+
+                    SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+                    await conn.OpenAsync();
+
+                    int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser"));
+                    string dec;
+
+                    if (declaration.Equals("true"))
+                    {
+                        dec = "TRUE";
+                    }
+                    else
+                    {
+                        dec = "FALSE";
+                    }
+
+                    var checking = await _context.OvertimeTickets.Where(x => x.EmployeeId.Equals(userID) && x.TicketDate.Equals(date.ToString("dd-MM-yyyy"))).FirstOrDefaultAsync();
+                    if (checking == null)
+                    {
+                        string query = "INSERT INTO OVERTIME_TICKETS VALUES (" + userID + ", '" + date.ToString("dd-MM-yyyy") + "', '" + date.ToShortTimeString() + "', '"+hours + "', '" + reason + "', '" + askedAdmin + "' , '" + dec + "', 'NOT YET', 'NO ONE');";
+
+                        SqlCommand command = new SqlCommand(query, conn);
+                        SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                        await conn.CloseAsync();
+                        await command.DisposeAsync();
+                        await dataReader.CloseAsync();
+
+                        TempData["OvertimeLogged"] = "Your overtime ticket has been submitted and will be pending on admin approval";
+                        return RedirectToAction("EmployeeDashboard", "Employee");
+                    }
+                    else
+                    {
+                        ViewBag.TooMany = "You cannot log another overtime ticket for the same day. Talk to an admin to edit your time";
+                        return View(_context.Admins);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        [HttpGet]
+        public IActionResult LoggedTickets()
+        {
+            return View(_context.OvertimeTickets);
         }
     }
 }

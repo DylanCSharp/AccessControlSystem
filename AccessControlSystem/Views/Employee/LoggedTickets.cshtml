@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Logged Overtime Tickets";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Network Configurations&trade;</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card border-0 shadow my-5" style="min-height: 78vh;">
+            <div class="card-body p-5 form-group justify-content-center align-self-center">
+                <h2 class="font-weight-light text-center">Welcome to the Employee Dashboard @ViewBag.LoggedIn</h2>
+                <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
