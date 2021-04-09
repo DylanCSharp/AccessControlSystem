@@ -15,27 +15,29 @@
     <div class="container-fluid">
         <div class="card border-0 shadow my-5" style="min-height: 78vh;">
             <div class="card-body p-5 form-group justify-content-center align-self-center">
-                <h2 class="font-weight-light text-center">Welcome to the Employee Dashboard @ViewBag.LoggedIn</h2>
+                <h2 class="font-weight-light text-center">Logged Overtime Tickets</h2>
+                <hr />
+                <h3 class="font-weight-light text-center">@ViewBag.History</h3>
                 <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
                 <br />
-                <div class="table-responsive-xl">
-                    <table class="table">
-                        <tr>
-                            <th scope="col">
-                                Ticket Date:
-                            </th>
-                            <th scope="col">
-                                Ticket Hours:
-                            </th>
-                            <th scope="col">
-                                Ticket Approved:
-                            </th>
-                            <th scope="col">
-                                Approved by whom:
-                            </th>
-                        </tr>
-                        @foreach (var item in Model)
-                        {
+                @foreach (var item in Model)
+                {
+                    <div class="table-responsive-xl">
+                        <table class="table">
+                            <tr>
+                                <th scope="col">
+                                    Ticket Date:
+                                </th>
+                                <th scope="col">
+                                    Ticket Hours:
+                                </th>
+                                <th scope="col">
+                                    Ticket Approved:
+                                </th>
+                                <th scope="col">
+                                    Approved by whom:
+                                </th>
+                            </tr>
                             <tr>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.TicketDate)
@@ -50,10 +52,10 @@
                                     @Html.DisplayFor(modelItem => item.ApprovedByWhom)
                                 </td>
                             </tr>
-                        }
-                    </table>
+                        </table>
+                    </div>
+                }
                 </div>
-            </div>
         </div>
     </div>
 </body>

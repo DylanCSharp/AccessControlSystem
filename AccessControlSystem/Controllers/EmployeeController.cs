@@ -354,12 +354,17 @@ namespace AccessControlSystem.Controllers
         }
 
         [HttpGet]
-        public IActionResult LoggedTickets()
+        public async  Task<IActionResult> LoggedTickets()
         {
             try
             {
                 if (HttpContext.Session.GetString("LoggedInUser") != null)
                 {
+                    var userHistory = await _context.OvertimeTickets.Where(x => x.EmployeeId.Equals(Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser")))).FirstOrDefaultAsync();
+                    if (userHistory == null)
+                    {
+                        ViewBag.History = "No Logged Overtime Ticket History for this Employee";
+                    }
                     return View(_context.OvertimeTickets.Where(x => x.EmployeeId.Equals(Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser")))));
                 }
                 else

@@ -17,9 +17,10 @@
         <div class="card border-0 shadow my-5" style="min-height: 78vh;">
             <div class="card-body p-5 form-group justify-content-center" style="margin-top: 5vh">
                 <h2 class="font-weight-light text-center">Pending Overtime Requests</h2>
+                <hr />
+                <h3 class="font-weight-light text-center">@ViewBag.History</h3>
                 <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
                 <h5 class="font-weight-light text-center">@ViewBag.Successful</h5>
-                <hr />
                 <br />
                 @foreach (var item in Model)
                 {
@@ -66,7 +67,7 @@
                         </table>
                     </div>
                 }
-                </div>
+            </div>
         </div>
     </div>
 </body>

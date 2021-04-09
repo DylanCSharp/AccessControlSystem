@@ -235,12 +235,17 @@ namespace AccessControlSystem.Controllers
         }
 
         [HttpGet]
-        public IActionResult OvertimeRequests()
+        public async Task<IActionResult> OvertimeRequests()
         {
             try
             {
                 if (HttpContext.Session.GetString("LoggedInAdmin") != null)
                 {
+                    var userHistory = await _context.OvertimeTickets.Where(x => x.EmployeeId.Equals(empid) && x.Approved.Equals("NOT YET")).FirstOrDefaultAsync();
+                    if (userHistory == null)
+                    {
+                        ViewBag.History = "No Pending Overtime Requests for this Employee";
+                    }
                     return View(_context.OvertimeTickets.Where(x => x.EmployeeId.Equals(empid) && x.Approved.Equals("NOT YET")));
                 }
                 else
