@@ -1,0 +1,57 @@
+﻿@model IEnumerable<AccessControlSystem.Models.Employee>
+@{
+    ViewData["Title"] = "Employee List";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Network Configurations&trade;</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card border-0 shadow my-5" style="min-height: 78vh;">
+            <div class="card-body p-5 form-group justify-content-center" style="margin-top: 5vh">
+                <h2 class="font-weight-light text-center">List of our Employees</h2>
+                <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
+                <br />
+                <div class="table-responsive-xl">
+                    <table class="table">
+                        <tr>
+                            <th scope="col">
+                                Employee Name:
+                            </th>
+                            <th scope="col">
+                                Employee Address:
+                            </th>
+                            <th scope="col">
+
+                            </th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EmployeeName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EmployeeAddress)
+                                </td>
+                                <td>
+                                    <form>
+                                        <button class="btn btn-secondary" formmethod="post" name="id" value="@item.EmployeeId">View Overtime Tickets</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

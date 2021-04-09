@@ -188,54 +188,118 @@ namespace AccessControlSystem.Controllers
             }
         }
 
+
         [HttpGet]
-        public IActionResult OvertimeRequests()
+        public IActionResult EmployeeOvertime()
         {
-            if (HttpContext.Session.GetString("LoggedInAdmin") != null)
+            try
             {
-                return View(_context.OvertimeTickets);
+                if (HttpContext.Session.GetString("LoggedInAdmin") != null)
+                {
+                    return View(_context.Employees);
+                }
+                else
+                {
+                    TempData["NotAdmin"] = "You need to be admin to access this page";
+                    return RedirectToAction("Login", "Admin");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["NotAdmin"] = "You need to be admin to access this page";
-                return RedirectToAction("Login", "Admin");
+                ViewBag.Error = ex.Message;
+                return View();
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Overtime(bool ticketStatus)
+        public IActionResult EmployeeOvertime(int id)
         {
-            DateTime date = DateTime.Now;
-
-            int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInAdmin"));
-
-            var adminName = await _context.Admins.Where(x => x.AdminId.Equals(userID)).FirstOrDefaultAsync();
-
-            string approved;
-            if (ticketStatus == true)
+            try
             {
-                approved = "APPROVED";
+                if (HttpContext.Session.GetString("LoggedInAdmin") != null)
+                {
+                    empid = id;
+                    return RedirectToAction("OvertimeRequests", "Admin");
+                }
+                else
+                {
+                    TempData["NotAdmin"] = "You need to be admin to access this page";
+                    return RedirectToAction("Login", "Admin");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                approved = "NOT APPROVED";
+                ViewBag.Error = ex.Message;
+                return View();
             }
+        }
 
-            //SQL UPDATES STUFF
-            SqlConnection conn = new SqlConnection();
-            await conn.OpenAsync();
+        [HttpGet]
+        public IActionResult OvertimeRequests()
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoggedInAdmin") != null)
+                {
+                    return View(_context.OvertimeTickets.Where(x => x.EmployeeId.Equals(empid) && x.Approved.Equals("NOT YET")));
+                }
+                else
+                {
+                    TempData["NotAdmin"] = "You need to be admin to access this page";
+                    return RedirectToAction("Login", "Admin");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
 
-            string query = "UPDATE OVERTIME_TICKETS SET APPROVED = '"+approved+"' WHERE EMPLOYEE_ID = "+userID+" AND TICKET_DATE = '"+date.ToString("dd-MM-yyyy")+"'";
+        [HttpPost]
+        public async Task<IActionResult> OvertimeRequests(string ticketStatus, int ticketNumber)
+        {
+            try
+            {
+                DateTime date = DateTime.Now;
 
-            SqlCommand command = new SqlCommand(query, conn);
-            SqlDataReader dataReader = await command.ExecuteReaderAsync();
+                int userID = Convert.ToInt32(HttpContext.Session.GetString("LoggedInAdmin"));
 
-            await conn.CloseAsync();
-            await command.DisposeAsync();
-            await dataReader.CloseAsync();
+                var adminName = await _context.Admins.Where(x => x.AdminId.Equals(userID)).FirstOrDefaultAsync();
 
+                string approved;
+                if (ticketStatus.Equals("true"))
+                {
+                    approved = "APPROVED";
+                }
+                else
+                {
+                    approved = "DENIED";
+                }
 
-            return RedirectToAction("Dashboard", "Admin");
+                //SQL UPDATES STUFF
+                SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
+                await conn.OpenAsync();
+
+                string query = "UPDATE OVERTIME_TICKETS SET APPROVED = '"+approved+"', APPROVED_BY_WHOM = '"+adminName.AdminName+"' WHERE TICKET_NUM = "+ticketNumber+"";
+
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                await conn.CloseAsync();
+                await command.DisposeAsync();
+                await dataReader.CloseAsync();
+
+                var user = await _context.Employees.Where(x => x.EmployeeId.Equals(empid)).FirstOrDefaultAsync();
+
+                ViewBag.Successful = "Ticket Number " + ticketNumber + " for "+ user.EmployeeName +" has successfully been given a status of " + approved;
+                return View(_context.OvertimeTickets.Where(x => x.EmployeeId.Equals(empid) && x.Approved.Equals("NOT YET")));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(_context.OvertimeTickets);
+            }
         }
 
     }

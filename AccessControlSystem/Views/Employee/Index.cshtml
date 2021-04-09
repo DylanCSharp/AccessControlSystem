@@ -35,11 +35,11 @@
                         <br />
                         <label for="inputEmployee">Enter your 4-Digit Employee Pass Code:</label>
                         <br />
-                        <div class="form-wrap">
-                            <input id="txb1" type="password" pattern="[1-9]+" style="min-height: 5vh; max-width: 6.5vh; text-align: center; font-size: 24px; font-weight: bold" name="one" maxlength="1" required />
-                            <input id="txb2" type="password" style="min-height: 5vh; max-width: 6.5vh; text-align: center; font-size: 24px; font-weight: bold" name="two" maxlength="1" required />
-                            <input id="txb3" type="password" style="min-height: 5vh; max-width: 6.5vh; text-align: center; font-size: 24px; font-weight: bold" name="three" maxlength="1" required />
-                            <input id="txb4" type="password" style="min-height: 5vh; max-width: 6.5vh; text-align: center; font-size: 24px; font-weight: bold" name="four" maxlength="1" required />
+                        <div>
+                            <input id="txb1" type="password" style="border:groove; min-height: 5vh; max-width: 6vh; text-align: center; font-size: 24px; font-weight: bold" name="one" maxlength="1" required />
+                            <input id="txb2" type="password" style="border: groove; min-height: 5vh; max-width: 6vh; text-align: center; font-size: 24px; font-weight: bold" name="two" maxlength="1" required />
+                            <input id="txb3" type="password" style="border: groove; min-height: 5vh; max-width: 6vh; text-align: center; font-size: 24px; font-weight: bold" name="three" maxlength="1" required />
+                            <input id="txb4" type="password" style="border: groove; min-height: 5vh; max-width: 6vh; text-align: center; font-size: 24px; font-weight: bold" name="four" maxlength="1" required />
                         </div>
                         <br />
                         <button type="submit" class="btn btn-lg btn-outline-dark" formmethod="post">Login</button>
@@ -64,17 +64,6 @@
                 document.getElementById('txb4').focus();
             }
         }
-       
-
-        window.addEventListener("keydown", function (e) {
-            if (e.keyCode === 8) {
-                if (this.document.getElementById('txb4')) {
-                    this.document.getElementById('txb4').value = null;
-                    document.getElementById('txb3').focus();
-                }
-            }
-        });
-        
     </script>
 </body>
 </html>

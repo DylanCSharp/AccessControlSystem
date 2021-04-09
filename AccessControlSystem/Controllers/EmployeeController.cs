@@ -44,6 +44,7 @@ namespace AccessControlSystem.Controllers
         {
             try
             {
+                //ADD IF TIME >=18 MAKE TIME IN 18:00 INSTEAD OF THE TIME THEY SIGNED IN IS
                 string passcode = one.ToString() + two.ToString() + three.ToString() + four.ToString();
 
                 var user = await _context.Employees.Where(x => x.EmployeeName.Equals(name)).FirstOrDefaultAsync();
@@ -93,10 +94,17 @@ namespace AccessControlSystem.Controllers
                     //if the user hasnt signed in for the day, insert a row into the table
                     else
                     {
+                        string query = "";
+                        if (date.Hour >= 18 && date.Minute > 0 && date.Second > 0)
+                        {
+                            query = "INSERT INTO EMPLOYEE_LOG VALUES (" + userID + ", '" + dummy + "', '" + dummy + "', '" + date.ToString("dd-MM-yyyy") + "', " + checkInStatus + ");";
+                        }
+                        else
+                        {
+                            query = "INSERT INTO EMPLOYEE_LOG VALUES (" + userID + ", '" + date.ToShortTimeString() + "', '" + dummy + "', '" + date.ToString("dd-MM-yyyy") + "', " + checkInStatus + ");";
+                        }
                         SqlConnection conn = new SqlConnection(_config.GetConnectionString("AccessControlDatabase"));
                         await conn.OpenAsync();
-
-                        string query = "INSERT INTO EMPLOYEE_LOG VALUES (" + userID + ", '" + date.ToShortTimeString() + "', '" + dummy + "', '" + date.ToString("dd-MM-yyyy") + "', " + checkInStatus + ");";
 
                         SqlCommand command = new SqlCommand(query, conn);
                         SqlDataReader dataReader = await command.ExecuteReaderAsync();
@@ -276,7 +284,7 @@ namespace AccessControlSystem.Controllers
         [HttpGet]
         public IActionResult OvertimeTicket()
         {
-            if (HttpContext.Session.GetString("LoggedInUser") != null && DateTime.Now.Hour >= 13 && DateTime.Now.Minute > 0 && DateTime.Now.Second > 0)
+            if (HttpContext.Session.GetString("LoggedInUser") != null && DateTime.Now.Hour >= 18 && DateTime.Now.Minute > 0 && DateTime.Now.Second > 0)
             {
                 return View(_context.Admins);
             }
@@ -348,7 +356,23 @@ namespace AccessControlSystem.Controllers
         [HttpGet]
         public IActionResult LoggedTickets()
         {
-            return View(_context.OvertimeTickets);
+            try
+            {
+                if (HttpContext.Session.GetString("LoggedInUser") != null)
+                {
+                    return View(_context.OvertimeTickets.Where(x => x.EmployeeId.Equals(Convert.ToInt32(HttpContext.Session.GetString("LoggedInUser")))));
+                }
+                else
+                {
+                    TempData["LoginFirst"] = "You need to login first to access this page";
+                    return RedirectToAction("Index", "Employee");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
         }
     }
 }

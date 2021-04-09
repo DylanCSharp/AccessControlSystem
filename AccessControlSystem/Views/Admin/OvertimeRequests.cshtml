@@ -1,3 +1,73 @@
-﻿@{
-    ViewData["Title"] = "Statistics";
+﻿@model IEnumerable<AccessControlSystem.Models.OvertimeTicket>
+@{
+    ViewData["Title"] = "OvertimeTickets";
 }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Network Configurations&trade;</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card border-0 shadow my-5" style="min-height: 78vh;">
+            <div class="card-body p-5 form-group justify-content-center" style="margin-top: 5vh">
+                <h2 class="font-weight-light text-center">Pending Overtime Requests</h2>
+                <h5 class="font-weight-light text-center">@ViewBag.Error</h5>
+                <h5 class="font-weight-light text-center">@ViewBag.Successful</h5>
+                <hr />
+                <br />
+                @foreach (var item in Model)
+                {
+                    <div class="table-responsive-xl">
+                        <table class="table">
+                            <tr>
+                                <th scope="col">
+                                    Ticket Date:
+                                </th>
+                                <th scope="col">
+                                    Reason for Overtime:
+                                </th>
+                                <th scope="col">
+                                    Hour(s)
+                                </th>
+                                <th scope="col">
+                                    Declaration:
+                                </th>
+                                <th scope="col">
+
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Reason)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketHours) hour(s)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Declaration)
+                                </td>
+                                <td>
+                                    <form>
+                                        <button class="btn btn-secondary" formmethod="post" asp-action="OvertimeRequests" asp-controller="Admin" name="ticketStatus" value="true">Approve</button>
+                                        <button class="btn btn-danger" formmethod="post" asp-action="OvertimeRequests" asp-controller="Admin" name="ticketStatus" value="false">Deny</button>
+                                        <input value="@item.TicketNum" name="ticketNumber" hidden />
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+                </div>
+        </div>
+    </div>
+</body>
+</html>
