@@ -284,7 +284,7 @@ namespace AccessControlSystem.Controllers
         [HttpGet]
         public IActionResult OvertimeTicket()
         {
-            if (HttpContext.Session.GetString("LoggedInUser") != null && DateTime.Now.Hour >= 18 && DateTime.Now.Minute > 0 && DateTime.Now.Second > 0)
+            if (HttpContext.Session.GetString("LoggedInUser") != null && DateTime.Now.Hour >= 14 && DateTime.Now.Minute > 0 && DateTime.Now.Second > 0)
             {
                 return View(_context.Admins);
             }

@@ -40,6 +40,9 @@
                                     Declaration:
                                 </th>
                                 <th scope="col">
+                                    Permission:
+                                </th>
+                                <th scope="col">
 
                                 </th>
                             </tr>
@@ -57,9 +60,14 @@
                                     @Html.DisplayFor(modelItem => item.Declaration)
                                 </td>
                                 <td>
+                                    @Html.DisplayFor(modelItem => item.AskedPermission)
+                                </td>
+                                <td>
                                     <form>
-                                        <button class="btn btn-secondary" formmethod="post" asp-action="OvertimeRequests" asp-controller="Admin" name="ticketStatus" value="true">Approve</button>
-                                        <button class="btn btn-danger" formmethod="post" asp-action="OvertimeRequests" asp-controller="Admin" name="ticketStatus" value="false">Deny</button>
+                                        <button class="btn btn-secondary btn-sm" style="min-width: 10vh;" formmethod="post" asp-action="OvertimeRequests" asp-controller="Admin" name="ticketStatus" value="true">Approve</button>
+                                        <br />
+                                        <br />
+                                        <button class="btn btn-danger btn-sm" style="min-width: 10vh;" formmethod="post" asp-action="OvertimeRequests" asp-controller="Admin" name="ticketStatus" value="false">Deny</button>
                                         <input value="@item.TicketNum" name="ticketNumber" hidden />
                                     </form>
                                 </td>
