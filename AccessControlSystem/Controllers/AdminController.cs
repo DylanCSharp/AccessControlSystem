@@ -50,7 +50,7 @@ namespace AccessControlSystem.Controllers
                 var admin = await _context.Admins.Where(x => x.AdminName.Equals(username)).FirstOrDefaultAsync();
                 bool isAdmin = scryptEncoder.Compare(password, admin.AdminHash);
 
-                if (isAdmin)
+                if (isAdmin == true)
                 {
                     HttpContext.Session.SetString("LoggedInAdmin", admin.AdminId.ToString());
                     return View("Dashboard");
